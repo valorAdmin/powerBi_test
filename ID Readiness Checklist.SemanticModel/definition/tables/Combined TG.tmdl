@@ -1,0 +1,395 @@
+table 'Combined TG'
+	lineageTag: 0082f903-bb00-41cc-98d9-410ab6c341b7
+
+	column 'TG IK Number'
+		dataType: string
+		lineageTag: fa3e02e4-01ca-49ed-8c0b-ed0aae27cfad
+		summarizeBy: none
+		sourceColumn: TG IK Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TGE IK Number'
+		dataType: string
+		lineageTag: 7dd81898-30f5-41ac-9c6b-d9a6951733f9
+		summarizeBy: none
+		sourceColumn: TGE IK Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TG Level'
+		dataType: string
+		lineageTag: c2ba3c46-af60-402f-8546-ab418df59c91
+		summarizeBy: none
+		sourceColumn: TG Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hub
+		dataType: string
+		lineageTag: 9e721337-97e7-4a1f-85a7-88c881b1f4b4
+		summarizeBy: none
+		sourceColumn: Hub
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TG Type'
+		dataType: string
+		lineageTag: 89681e37-9f44-472a-90a4-3c1a35c55a19
+		summarizeBy: none
+		sourceColumn: TG Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFO ID'
+		dataType: string
+		lineageTag: e39bfe76-cf14-4b7a-b9e0-d46cd017a8c2
+		summarizeBy: none
+		sourceColumn: OFO ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFO Name'
+		dataType: string
+		lineageTag: 4d2da7cc-6bf1-4332-bd40-1d52bab509ef
+		summarizeBy: none
+		sourceColumn: OFO Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OSO ID'
+		dataType: string
+		lineageTag: 5cb6723f-a87c-4747-aa12-188878c68ffe
+		summarizeBy: none
+		sourceColumn: OSO ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OSO Name'
+		dataType: string
+		lineageTag: 736cdfe8-af55-4407-9780-ddb8f752a59c
+		summarizeBy: none
+		sourceColumn: OSO Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'AHL ID'
+		dataType: string
+		lineageTag: bc4fd2f3-95f0-4745-b5b5-b75bd7c5a40f
+		summarizeBy: none
+		sourceColumn: AHL ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column AHL
+		dataType: string
+		lineageTag: d7f8494c-b737-4e8c-99cc-eb245d12b116
+		summarizeBy: none
+		sourceColumn: AHL
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hub Lead ID'
+		dataType: string
+		lineageTag: 273a1f42-bbeb-451c-ad04-52a9e5728f15
+		summarizeBy: none
+		sourceColumn: Hub Lead ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hub Lead'
+		dataType: string
+		lineageTag: 0e6d7b70-75e7-4b86-ae32-08e5039f7d6d
+		summarizeBy: none
+		sourceColumn: Hub Lead
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regional Lead ID'
+		dataType: string
+		lineageTag: 3a78b890-b89a-459e-a997-24d2a7b2904f
+		summarizeBy: none
+		sourceColumn: Regional Lead ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Regional Lead'
+		dataType: string
+		lineageTag: 8036735e-2c5f-4801-84e7-e54bcefcb44b
+		summarizeBy: none
+		sourceColumn: Regional Lead
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TG Status'
+		dataType: string
+		lineageTag: 0f630026-a35d-45c5-af5f-a74d43420eae
+		summarizeBy: none
+		sourceColumn: TG Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duplicate Phone Number' =
+			
+			
+			var duplicate_count=CALCULATE(sum('members_entity'[Duplicate Phone Number]))+0
+			
+			RETURN if(duplicate_count>0,"Yes","No")
+		lineageTag: ceb822a7-33b0-4ca3-a08e-78de3559c78e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator ID'
+		dataType: string
+		lineageTag: b9ca1fdc-3b08-4ef7-8956-bb191efadc83
+		summarizeBy: none
+		sourceColumn: Operator ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TFM Complete Status' = ```
+			
+			VAR membersInTG = CALCULATE(DISTINCTCOUNT(members_entity[unique_member_id]),'members_entity'[approval_flag] IN {1,4}) + 0 
+			VAR activeTgLeader=  CALCULATE(DISTINCTCOUNT(members_entity[unique_member_id]),members_entity[role]="Leader",'members_entity'[approval_flag] IN {1,4}) + 0 
+			VAR checkNormalTG= if(and(activeTgLeader=1,membersInTG>=3),"Yes","No")
+			VAR checkSingleMemberTG=if(and(activeTgLeader=1,membersInTG>=1),"Yes","No")
+			VAR check= if('Combined TG'[Single Member TG]="No",checkNormalTG,checkSingleMemberTG)
+			RETURN check
+			```
+		lineageTag: 9ed55edb-3cc2-43ac-bd5a-1a84f30752f1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TGL Phone Number Verification' =
+			
+			VAR tgl_phone_number= CALCULATE(COUNT('members_entity'[unique_member_id]),'members_entity'[phone_number_verification_flag] IN {1, 2})
+			VAR member_count=CALCULATE(COUNT('members_entity'[unique_member_id]))
+			VAR checkNormalTG= if(AND(member_count=tgl_phone_number,member_count>=3),"Yes","No")
+			VAR checkSingleMemberTG=if(tgl_phone_number>=1,"Yes","No")
+			VAR check= if('Combined TG'[Single Member TG]="No",checkNormalTG,checkSingleMemberTG)
+			RETURN check
+			
+			//VAR tgl_phone_number= CALCULATE(COUNT('members_entity'[unique_member_id]),'members_entity'[role] = "Leader",'members_entity'[phone_number_verification_flag] IN {1, 2})
+		lineageTag: 06200e27-0349-4f4c-8c66-cab92a4a2887
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TGL BVN Record' = ```
+			
+			VAR tgl_bvn = 
+			    CALCULATE(
+			        COUNTROWS('members_entity'),
+			        NOT(ISBLANK('members_entity'[bvn]))
+			    ) + 0
+			
+			VAR check = IF(tgl_bvn >= 1, "Yes", "No")
+			
+			RETURN check
+			```
+		lineageTag: b1ef39e4-02cd-42b2-856a-6eb43e12086f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid BVN' = ```
+			
+			VAR bvn_required= 'Combined TG'[Combined TG(All TGs).BVN Required]
+			VAR tgl_bvn = 
+			    CALCULATE(
+			        COUNTROWS('members_entity'),
+			        NOT(ISBLANK('members_entity'[Valid BVN]))
+			    ) + 0
+			
+			VAR check = IF(bvn_required="No","N/A",IF(tgl_bvn >= 1, "Yes", "No"))
+			
+			RETURN check
+			```
+		lineageTag: a167ee2e-276c-4489-8c56-30fa1e4ef883
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Entrepreneur clearance'
+		dataType: string
+		lineageTag: b937565b-6c24-4e4a-978f-8bc4f70c0696
+		summarizeBy: none
+		sourceColumn: Entrepreneur clearance
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator clearance'
+		dataType: string
+		lineageTag: 09f1bc9d-db5a-4493-b339-4931da46e6f7
+		summarizeBy: none
+		sourceColumn: Operator clearance
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFO Clearance' = ```
+			
+			VAR ofo_cleared_members = 
+			    CALCULATE(
+			        COUNTROWS('members_entity'), 
+			        NOT(ISBLANK('members_entity'[OFO Clearance]))
+			    ) + 0
+			
+			VAR checkNormalTG = IF(ofo_cleared_members >= 3, "Yes", "No")
+			VAR checkSingleMemberlTG = IF(ofo_cleared_members >= 1, "Yes", "No")
+			VAR check= if('Combined TG'[Single Member TG]="No",checkNormalTG,checkSingleMemberlTG)
+			
+			RETURN check
+			```
+		lineageTag: e002ee61-aab9-4b39-8aa5-ccb5ed450994
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Upfront Status' =
+			
+			VAR upfront=if('Combined TG'[Upfront Balance]>=190000,"Yes","No")
+			VAR check=if('Combined TG'[TG Status]="Returning TG","N/A",upfront)
+			RETURN check
+		lineageTag: 93d8124c-d0fb-4c2d-a7d4-86b4bf8c9d1d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Upfront Balance' =
+			
+			VAR upfront_balance=CALCULATE(SUM('up_front_balance'[Balance upfront]),REMOVEFILTERS('Combined TG'[Upfront Status],'Combined TG'[% TG Readiness]))+0
+			VAR deposit= CALCULATE(SUM('confirmed_deposits_entity'[Total Amount Deposited]),REMOVEFILTERS('Combined TG'[Upfront Status],'Combined TG'[% TG Readiness]))+0
+			VAR total=upfront_balance + deposit
+			RETURN total
+		lineageTag: ed1c2818-f641-41bf-8389-0d090b9e1c7f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column '% TG Readiness' =
+			
+			VAR tfm= if('Combined TG'[TFM Complete Status]="Yes",1,0)
+			VAR upfront= if(OR('Combined TG'[Upfront Status]="Yes",'Combined TG'[Upfront Status]="N/A"),1,0)
+			VAR valid_bvn=if('Combined TG'[Valid BVN]<>"No",1,0)
+			VAR valid_id_card= if(OR('Combined TG'[Valid ID Card]="Yes",'Combined TG'[Valid ID Card]="N/A"),1,0)
+			VAR community_head_approval=if(or('Combined TG'[TGL Approval Status]="N/A",'Combined TG'[TGL Approval Status]="Yes"),1,0)
+			VAR duplicate_phone_number=if('Combined TG'[Duplicate Phone Number]="No",1,0)
+			VAR phone_number_verification=if('Combined TG'[TGL Phone Number Verification]="Yes",1,0)
+			VAR entrepreneur_clearance=if('Combined TG'[Entrepreneur clearance]="Yes",1,0)
+			VAR operator_clearance= if('Combined TG'[Operator clearance]="Yes",1,0)
+			VAR ofo_clearnce=if('Combined TG'[OFO Clearance]="Yes",1,0)
+			VAR operator_store=if('Combined TG'[Operator Store Registeration]="Yes",1,0)
+			VAR operator_maxout=IF('Combined TG'[Operator Max Out]="Yes",1,0)
+			
+			
+			VAR total=tfm+valid_bvn+community_head_approval+duplicate_phone_number+phone_number_verification+upfront+entrepreneur_clearance+operator_clearance+valid_id_card+operator_store+ofo_clearnce+operator_maxout
+			
+			RETURN  DIVIDE(total,12)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: cba7cabf-2e81-409b-ba6f-cbee65fdd16c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Single Member TG'
+		dataType: string
+		lineageTag: 02f52fb2-1af5-4aae-a3ee-4da14ab18812
+		summarizeBy: none
+		sourceColumn: Single Member TG
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid ID Card'
+		dataType: string
+		lineageTag: 04a1abdb-3be5-48c3-a2a9-b4ac1bd81162
+		summarizeBy: none
+		sourceColumn: Valid ID Card
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TGL Approval Status'
+		dataType: string
+		lineageTag: 16d2fde3-6b33-468a-9746-54f589f91443
+		summarizeBy: none
+		sourceColumn: TGL Approval Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Max Out' =
+			
+			VAR operatorID='Combined TG'[Operator ID]
+			VAR operator_tgs_max_out= CALCULATE(Max('Operator_Details'[TGs to Max Out]),'Operator_Details'[Operator ID]=operatorID,'Operator_Details'[Excess TGs]=0)
+			VAR operator_excess_tg= CALCULATE(Max('Operator_Details'[Excess TGs]),'Operator_Details'[Operator ID]=operatorID)
+			VAR check=IF(AND(operator_tgs_max_out<=0,operator_excess_tg=0),"Yes","No")
+			
+			RETURN check
+		lineageTag: 2e954c16-aacb-4c61-aa1b-7f1d103b4921
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Combined TG(All TGs).BVN Required'
+		dataType: string
+		lineageTag: 073912f9-718b-4bda-a616-c62fd04e8be8
+		summarizeBy: none
+		sourceColumn: Combined TG(All TGs).BVN Required
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Store Registeration' =
+			
+			VAR operator_id='Combined TG'[Operator ID]
+			VAR operator_store_check= CALCULATE(MAX('Operator_Details'[Operator Store Approval Check]),'Operator_Details'[Operator ID]=operator_id)
+			VAR check= IF(operator_store_check=BLANK(),"No",operator_store_check)
+			RETURN check
+		lineageTag: e74326bd-3633-4788-9dc7-723c949f2d85
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Combined TG' = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows([]),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc" = Workspaces{[workspaceId="5fa7be6e-9ee3-436a-8497-c9c05ce349cc"]}[Data],
+				    #"6ede87d5-bc01-406f-b272-957137900d81" = #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc"{[dataflowId="6ede87d5-bc01-406f-b272-957137900d81"]}[Data],
+				    #"Combined TG_" = #"6ede87d5-bc01-406f-b272-957137900d81"{[entity="Combined TG",version=""]}[Data],
+				    #"Replaced Value" = Table.ReplaceValue(#"Combined TG_","k","K",Replacer.ReplaceText,{"Operator ID"}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Replaced Value",{"TG IK Number", "TGE IK Number", "Operator ID", "TG Level", "Hub", "TG Type", "Single Member TG", "OFO ID", "OFO Name", "OSO ID", "OSO Name", "AHL ID", "AHL", "Hub Lead ID", "Hub Lead", "Regional Lead ID", "Regional Lead", "TG Status"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns", {"TG IK Number"}),
+				    #"Merged Queries7" = Table.NestedJoin(#"Removed Duplicates", {"TG IK Number"}, clearance, {"ik_number"}, "clearance", JoinKind.LeftOuter),
+				    #"Expanded clearance" = Table.ExpandTableColumn( #"Merged Queries7", "clearance", {"tge_approval_flag", "bgo_approval_flag"}, {"clearance.tge_approval_flag", "clearance.bgo_approval_flag"}),
+				    #"Added Conditional Column5" = Table.AddColumn(#"Expanded clearance", "Entrepreneur clearance", each if [clearance.tge_approval_flag] = null then "No" else if [clearance.tge_approval_flag] = "1" then "Yes" else "No"),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Added Conditional Column5",{"clearance.tge_approval_flag"}),
+				    #"Added Conditional Column6" = Table.AddColumn(#"Removed Columns3", "Operator clearance", each if [clearance.bgo_approval_flag] = null then "No" else if [clearance.bgo_approval_flag] = "1" then "Yes" else "No"),
+				    #"Removed Columns4" = Table.RemoveColumns(#"Added Conditional Column6",{"clearance.bgo_approval_flag"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Columns4", {"TG IK Number"}, valid_id_cards, {"Trust Group IKNumber"}, "valid_id_cards", JoinKind.LeftOuter),
+				    #"Expanded valid_id_cards" = Table.ExpandTableColumn(#"Merged Queries", "valid_id_cards", {"Validated?"}, {"valid_id_cards.Validated?"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Expanded valid_id_cards", "Valid ID Card", each if [TG Status] = "Returning TG" then "N/A" else if [#"valid_id_cards.Validated?"] = "YES" then "Yes" else "No"),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Conditional Column",{{"Valid ID Card", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"valid_id_cards.Validated?"}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Removed Columns", {"TG IK Number"}, #"members_entity (2)", {"ik_number"}, "members_entity (2)", JoinKind.LeftOuter),
+				    #"Expanded members_entity (2)" = Table.ExpandTableColumn(#"Merged Queries2", "members_entity (2)", {"Count"}, {"members_entity (2).Count"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Expanded members_entity (2)", each ([#"members_entity (2).Count"] <> null)),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Filtered Rows",{"members_entity (2).Count"}),
+				    #"Merged Queries3" = Table.NestedJoin(#"Removed Columns2", {"TG IK Number"}, tgl_approval_status_entity, {"ik_number"}, "tgl_approval_status_entity", JoinKind.LeftOuter),
+				    #"Expanded tgl_approval_status_entity" = Table.ExpandTableColumn(#"Merged Queries3", "tgl_approval_status_entity", {"ik_number"}, {"tgl_approval_status_entity.ik_number"}),
+				    #"Added Conditional Column2" = Table.AddColumn(#"Expanded tgl_approval_status_entity", "TGL Approval Status", each if [TG Status] = "Returning TG" then "N/A" else if [tgl_approval_status_entity.ik_number] <> null then "Yes" else "No"),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Conditional Column2",{{"TGL Approval Status", type text}}),
+				    #"Removed Columns5" = Table.RemoveColumns(#"Changed Type2",{"tgl_approval_status_entity.ik_number"}),
+				    #"Removed Duplicates1" = Table.Distinct(#"Removed Columns5", {"TG IK Number"}),
+				    #"Merged Queries4" = Table.NestedJoin(#"Removed Duplicates1", {"TG IK Number"}, #"Combined TG(All TGs)", {"TG IK Number"}, "Combined TG(All TGs)", JoinKind.LeftOuter),
+				    #"Expanded Combined TG(All TGs)" = Table.ExpandTableColumn(#"Merged Queries4", "Combined TG(All TGs)", {"BVN Required"}, {"Combined TG(All TGs).BVN Required"})
+				in
+				    #"Expanded Combined TG(All TGs)"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

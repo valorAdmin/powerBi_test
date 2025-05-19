@@ -1,0 +1,53 @@
+table valid_id_cards
+	lineageTag: 8b41b4a7-54c5-4278-9ec8-1aa6b7e32958
+
+	column Validated?
+		dataType: string
+		lineageTag: cc98bbf4-2d17-4918-afe2-ddaa77c8545b
+		summarizeBy: none
+		sourceColumn: Validated?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trust Group IKNumber'
+		dataType: string
+		lineageTag: 66bcb182-7f54-4b2e-b324-fe18c63b939f
+		summarizeBy: none
+		sourceColumn: Trust Group IKNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Number of Members'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0f31d583-5915-4013-8bfa-65623cfe1e23
+		summarizeBy: sum
+		sourceColumn: Number of Members
+
+		annotation SummarizationSetBy = Automatic
+
+	partition valid_id_cards = m
+		mode: import
+		source = ```
+				let 
+				    Source = Csv.Document(Web.Contents("https://docs.google.com/spreadsheets/d/e/2PACX-1vR-HnyF2syh6Z_uAMcl2dK9PEIt2IT0qGOm_gWe4iSkrKvzEXf68kk6Z-cNTD4efx_Sc9oNpkFDkjLw/pub?gid=420133250&single=true&output=csv"),[Delimiter=",", Columns=54, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}, {"Column7", type text}, {"Column8", type text}, {"Column9", type text}, {"Column10", type text}, {"Column11", type text}, {"Column12", type text}, {"Column13", type text}, {"Column14", type text}, {"Column15", type text}, {"Column16", type text}, {"Column17", type text}, {"Column18", type text}, {"Column19", type text}, {"Column20", type text}, {"Column21", type text}, {"Column22", type text}, {"Column23", type text}, {"Column24", type text}, {"Column25", type text}, {"Column26", type text}, {"Column27", type text}, {"Column28", type text}, {"Column29", type text}, {"Column30", type text}, {"Column31", type text}, {"Column32", type text}, {"Column33", type text}, {"Column34", type text}, {"Column35", type text}, {"Column36", type text}, {"Column37", type text}, {"Column38", type text}, {"Column39", type text}, {"Column40", type text}, {"Column41", type text}, {"Column42", type text}, {"Column43", type text}, {"Column44", type text}, {"Column45", type text}, {"Column46", type text}, {"Column47", type text}, {"Column48", type text}, {"Column49", type text}, {"Column50", type text}, {"Column51", type text}, {"Column52", type text}, {"Column53", type text}, {"Column54", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Promoted Headers",{"unique_member_id", "ik_number", "first_name", "middle_name", "last_name", "role"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"unique_member_id"}, members_entity, {"unique_member_id"}, "members_entity", JoinKind.LeftOuter),
+				    #"Expanded members_entity" = Table.ExpandTableColumn(#"Merged Queries", "members_entity", {"role"}, {"members_entity.role"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Expanded members_entity", each ([members_entity.role] = "Leader")),
+				
+				    #"Grouped Rows" = Table.Group(#"Filtered Rows", {"ik_number"}, {{"Number of Members", each Table.RowCount(_), Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Grouped Rows",{{"ik_number", "Trust Group IKNumber"}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns", "Validated?", each if [Number of Members] >= 1 then "YES" else "NO"),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Added Conditional Column",{{"Trust Group IKNumber", type text}, {"Validated?", type text}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type4", {"Trust Group IKNumber"})
+				in
+				    #"Removed Duplicates"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

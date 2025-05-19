@@ -1,0 +1,62 @@
+table 'Refresh Date'
+	lineageTag: 4b8bfa54-fda9-4a43-8098-894639962a83
+
+	column 'Refresh Date'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4e781088-1856-4edb-868a-23b7c4dbf4e3
+		summarizeBy: none
+		sourceColumn: Refresh Date
+
+		variation Variation
+			isDefault
+			relationship: 80f5a7b7-df12-4179-abe3-6381847967e0
+			defaultHierarchy: LocalDateTable_481e1dad-4454-48c7-83a8-9af8d116918d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ade13b46-3e3c-4871-99c6-7f129bf5bfb4
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 9800f6e5-e4c8-4854-bf7d-f47c773ef3c5
+			defaultHierarchy: LocalDateTable_7788b893-e778-4b9f-b69a-ce907e751c77.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 10b50d2c-f757-457b-89d1-1d40922c13aa
+		summarizeBy: none
+		sourceColumn: Time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	partition 'Refresh Date' = m
+		mode: import
+		source =
+				let
+				     Source = DateTime.LocalNow(),
+				    #"Converted to Table" = #table(1, {{Source}}),
+				    #"Added 1 Hour" = Table.TransformColumns(#"Converted to Table", {{"Column1", each _ + #duration(0, 1, 0, 0)}}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Added 1 Hour", "Column1", "Column1 - Copy"),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Duplicated Column", "Column1 - Copy", "Column1 - Copy - Copy"),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Duplicated Column1",{{"Column1", type datetime}, {"Column1 - Copy", type date}, {"Column1 - Copy - Copy", type time}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Refresh Date"}, {"Column1 - Copy", "Date"}, {"Column1 - Copy - Copy", "Time"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

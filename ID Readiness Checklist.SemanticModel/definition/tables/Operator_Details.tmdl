@@ -1,0 +1,215 @@
+table Operator_Details
+	lineageTag: d0868968-5c02-4ddf-9f86-6b83d1b51f65
+
+	column 'Operator ID'
+		dataType: string
+		lineageTag: ec5404cc-c3a9-40fd-aeb9-8a145d6de878
+		summarizeBy: none
+		sourceColumn: Operator ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Name'
+		dataType: string
+		lineageTag: 477b1f8c-87cc-426c-9f63-728b9c3a873b
+		summarizeBy: none
+		sourceColumn: Operator Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hub
+		dataType: string
+		lineageTag: 689c7602-0a9f-4451-ab11-ad48198048ef
+		summarizeBy: none
+		sourceColumn: Hub
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Level'
+		dataType: string
+		lineageTag: 6629bd13-3d9e-4cf5-bb60-4f0d60b69ebf
+		summarizeBy: none
+		sourceColumn: Operator Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 3c7018e4-35e3-4199-afc5-97982483f9e9
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Type'
+		dataType: string
+		lineageTag: 2cca10cc-3de1-4dd1-940f-979371a90bd6
+		summarizeBy: none
+		sourceColumn: Operator Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Operator_Gender
+		dataType: string
+		lineageTag: dcce5d04-b8c5-4ce2-a434-b620c3d786a4
+		summarizeBy: none
+		sourceColumn: Operator_Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unique_member_id
+		dataType: string
+		lineageTag: a6dd2a58-34c8-46ff-be8d-7c4408558cd7
+		summarizeBy: none
+		sourceColumn: Unique_member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Max Out TGs'
+		dataType: int64
+		formatString: 0
+		lineageTag: 4bf89220-a72c-4d9c-8d5c-f2fbe9f1c425
+		summarizeBy: none
+		sourceColumn: Max Out TGs
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Complete TFM TGs' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]))
+		formatString: 0
+		lineageTag: 5848f256-4d96-44f9-b8bb-be73ca4f4eeb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TGs to Max Out' =
+			
+			VAR operator_max_out_tgs= 'Operator_Details'[Adj Max Out TGs]
+			VAR complete_tgs='Operator_Details'[Complete TFM TGs]
+			VAR tg_to_max_out=operator_max_out_tgs-complete_tgs
+			VAR operator_type= 'Operator_Details'[Operator Type]
+			VAR calc=IF(complete_tgs>operator_max_out_tgs,0,tg_to_max_out)
+			
+			RETURN calc
+			
+			
+			/*VAR calc= IF(operator_type="Company OP",0,
+			            IF(complete_tgs>operator_max_out_tgs,0,tg_to_max_out)) */
+		formatString: 0
+		lineageTag: b816cb6a-d18a-4b8e-a33c-bb92318859a6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adj Max Out TGs' =
+			
+			VAR tg_count= CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]))
+			VAR tg_max_out= 'Operator_Details'[Max Out TGs]
+			VAR operator_type= 'Operator_Details'[Operator Type]
+			VAR check= IF(operator_type="Company OP",tg_count,tg_max_out)
+			
+			RETURN check
+		formatString: 0
+		lineageTag: ca441603-8115-4fb0-92db-4fc2e023c000
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HA Size'
+		dataType: int64
+		formatString: 0
+		lineageTag: c2a81479-a9d7-438f-acad-732d1424918b
+		summarizeBy: none
+		sourceColumn: HA Size
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Number of Approved Stores'
+		dataType: double
+		lineageTag: b62338b2-b879-4dfe-8c40-089b7a639135
+		summarizeBy: none
+		sourceColumn: Number of Approved Stores
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Volume (cubic meters)'
+		dataType: double
+		lineageTag: a10bd92c-01f7-4ad1-ac54-1880bb5f8db8
+		summarizeBy: none
+		sourceColumn: Volume (cubic meters)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Required Volume (cubic meters)'
+		dataType: double
+		lineageTag: 734d0ad0-c79e-4048-8816-90868fe96a27
+		summarizeBy: none
+		sourceColumn: Required Volume (cubic meters)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Operator Store Approval Check'
+		dataType: string
+		lineageTag: dff7930b-b5ca-4fa8-8ef4-346829e876f1
+		summarizeBy: none
+		sourceColumn: Operator Store Approval Check
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Portfolio Frozen'
+		dataType: string
+		lineageTag: 427156c6-3e72-49ac-99ad-6630279c3a1b
+		summarizeBy: none
+		sourceColumn: Portfolio Frozen
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Excess TGs' =
+			
+			VAR operator_max_out_tgs= 'Operator_Details'[Adj Max Out TGs]
+			VAR complete_tgs='Operator_Details'[Complete TFM TGs]
+			VAR excess_tgs=complete_tgs-operator_max_out_tgs
+			VAR operator_type= 'Operator_Details'[Operator Type]
+			VAR calc=IF(complete_tgs>operator_max_out_tgs,excess_tgs,0)
+			
+			RETURN calc
+		formatString: 0
+		lineageTag: ff968e9a-b386-43e0-8077-d6992fc8650f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Operator_Details = m
+		mode: import
+		source =
+				let
+				    Source = PowerPlatform.Dataflows(null),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc" = Workspaces{[workspaceId="5fa7be6e-9ee3-436a-8497-c9c05ce349cc"]}[Data],
+				    #"6ede87d5-bc01-406f-b272-957137900d81" = #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc"{[dataflowId="6ede87d5-bc01-406f-b272-957137900d81"]}[Data],
+				    Operator_Details_ = #"6ede87d5-bc01-406f-b272-957137900d81"{[entity="Operator_Details",version=""]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Operator_Details_,{{"Max Out TGs", Int64.Type}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([Operator ID] <> null and [Operator ID] <> "")),
+				    #"Added Custom" = Table.AddColumn(#"Filtered Rows", "HA Size", each [Max Out TGs]*2),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"HA Size", Int64.Type}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed Type1", {"Operator ID"}, operator_store, {"Operator Id"}, "operator_store", JoinKind.LeftOuter),
+				    #"Expanded operator_store" = Table.ExpandTableColumn(#"Merged Queries", "operator_store", {"Number of Approved Stores", "Volume (cubic meters)"}, {"Number of Approved Stores", "Volume (cubic meters)"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Expanded operator_store",null,0,Replacer.ReplaceValue,{"Number of Approved Stores"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",null,0,Replacer.ReplaceValue,{"Volume (cubic meters)"}),
+				    #"Added Custom1" = Table.AddColumn(#"Replaced Value1", "Required Volume (cubic meters)", each [HA Size]*0.81),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom1",{{"Required Volume (cubic meters)", type number}}),
+				    #"Added Conditional Column1" = Table.AddColumn(#"Changed Type2", "Operator Store Approval Check", each if [#"Volume (cubic meters)"] >= [#"Required Volume (cubic meters)"] then "Yes" else "No"),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Conditional Column1",{{"Operator Store Approval Check", type text}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type3", {"Operator ID"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

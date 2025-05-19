@@ -1,0 +1,157 @@
+table members_entity
+	lineageTag: 9bd193ff-56c5-463a-9799-8db2b0be12bc
+
+	column unique_member_id
+		dataType: string
+		lineageTag: bd9a6a1a-3509-49ac-85ee-9e1853572586
+		summarizeBy: none
+		sourceColumn: unique_member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ik_number
+		dataType: string
+		lineageTag: 6099dacc-a187-46e1-93b6-d080f602fed6
+		summarizeBy: none
+		sourceColumn: ik_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column role
+		dataType: string
+		lineageTag: 5b4861ea-a883-405f-ad21-a8e1e1437ca9
+		summarizeBy: none
+		sourceColumn: role
+
+		annotation SummarizationSetBy = Automatic
+
+	column phone_number
+		dataType: string
+		lineageTag: 5744ebc4-e997-43e9-aace-6df66632f0cf
+		summarizeBy: none
+		sourceColumn: phone_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column deactivate_flag
+		dataType: string
+		lineageTag: 28c56b3c-70f1-4047-85d4-348dfb0165e6
+		summarizeBy: none
+		sourceColumn: deactivate_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column delete_flag
+		dataType: string
+		lineageTag: 4cc42dad-2a18-4526-8ec2-3c8b867664e6
+		summarizeBy: none
+		sourceColumn: delete_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_flag
+		dataType: string
+		lineageTag: 7e48b910-a67d-49a2-b3ff-61758d10d220
+		summarizeBy: none
+		sourceColumn: enrollment_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column bvn
+		dataType: string
+		lineageTag: 5f9ca12a-b704-4206-bcba-abbfcdb1b082
+		summarizeBy: none
+		sourceColumn: bvn
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_card_flag
+		dataType: string
+		lineageTag: ef6e83ef-7c0d-4a11-b3a1-88e749b37eb9
+		summarizeBy: none
+		sourceColumn: id_card_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duplicate Phone Number' = ```
+			
+			IF(
+			    CALCULATE(
+			        COUNTROWS(members_entity),
+			        ALLEXCEPT(members_entity, members_entity[phone_number])
+			    ) > 1,
+			    1,
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 57d3a80b-5953-45c3-b308-a75309b6153e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column phone_number_verification_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: cb6c15c8-df60-4d42-a046-32e8658989eb
+		summarizeBy: sum
+		sourceColumn: phone_number_verification_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid BVN'
+		dataType: string
+		lineageTag: 9afd680f-c91b-43e2-8b1c-ea0ad078d15a
+		summarizeBy: none
+		sourceColumn: Valid BVN
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFO Clearance'
+		dataType: string
+		lineageTag: 79a0f328-7fa4-4965-bec0-a0994584aaec
+		summarizeBy: none
+		sourceColumn: OFO Clearance
+
+		annotation SummarizationSetBy = Automatic
+
+	column approval_flag
+		dataType: int64
+		formatString: 0
+		lineageTag: dd4d482d-dc8c-4662-b6d4-7dd21c9b057a
+		summarizeBy: sum
+		sourceColumn: approval_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column enrollment_date
+		dataType: string
+		lineageTag: b7e5ba4f-9a78-4c7e-927b-c2552b98ccb7
+		summarizeBy: none
+		sourceColumn: enrollment_date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition members_entity = m
+		mode: import
+		source =
+				let
+				    Source = Odbc.Query("dsn=prod-recruitment-db", "SELECT a.unique_member_id, a.ik_number,a.role,a.phone_number, a.deactivate_flag, a.delete_flag,a.id_card_flag,a.enrollment_flag,a.bvn,b.approval_flag,a.enrollment_date#(lf)#(tab)FROM public.members_entity AS a #(lf)LEFT JOIN public.member_pool_entity  AS b #(lf)ON a.unique_member_id = b.unique_member_id  #(lf)where a.enrollment_flag='1' and a.deactivate_flag='0' and a.enrollment_date>'2024-12-31'#(lf)"),
+				    #"Replaced Value" = Table.ReplaceValue(Source, "+234", "0", Replacer.ReplaceText, {"phone_number"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value", "2340", "0", Replacer.ReplaceText, {"phone_number"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1", "234", "0", Replacer.ReplaceText, {"phone_number"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Replaced Value2", {"unique_member_id"}, member_info_entity, {"unique_member_id"}, "member_info_entity", JoinKind.LeftOuter),
+				    #"Expanded member_info_entity" = Table.ExpandTableColumn(#"Merged Queries", "member_info_entity", {"phone_number_verification_flag"}, {"phone_number_verification_flag"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Expanded member_info_entity", {"unique_member_id"}, bvn_name_validation, {"unique_member_id"}, "successful_bvn_validation", JoinKind.LeftOuter),
+				    #"Expanded successful_bvn_validation" = Table.ExpandTableColumn(#"Merged Queries1", "successful_bvn_validation", {"unique_member_id"}, {"unique_member_id.1"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded successful_bvn_validation",{{"unique_member_id.1", "Valid BVN"}}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Renamed Columns", {"unique_member_id"}, ofo_clearance, {"unique_member_id"}, "ofo_clearance", JoinKind.LeftOuter),
+				    #"Expanded ofo_clearance" = Table.ExpandTableColumn(#"Merged Queries2", "ofo_clearance", {"unique_member_id"}, {"OFO Clearance"})
+				in
+				    #"Expanded ofo_clearance"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

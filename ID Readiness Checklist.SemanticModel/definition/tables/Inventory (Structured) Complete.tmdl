@@ -1,0 +1,153 @@
+table 'Inventory (Structured) Complete'
+	lineageTag: ec9d899a-0ba9-4d2d-a34f-cfea3ba35f08
+
+	column Products
+		dataType: string
+		lineageTag: 2ddef0fa-7047-4b5b-a1ad-545937114ecc
+		summarizeBy: none
+		sourceColumn: Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hub
+		dataType: string
+		lineageTag: a0eb8e59-cc53-4113-a47e-5f27d5b18303
+		summarizeBy: none
+		sourceColumn: Hub
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ID Warehouses'
+		dataType: string
+		lineageTag: a88819b3-8690-4174-a108-26e0f3089dd6
+		summarizeBy: none
+		sourceColumn: ID Warehouses
+
+		annotation SummarizationSetBy = Automatic
+
+	column available_quantity
+		dataType: double
+		lineageTag: ad8a2109-5fa5-4d3d-b607-88b4fad7801e
+		summarizeBy: sum
+		sourceColumn: available_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Needed Quantity' = ```
+			
+			VAR product = 'Inventory (Structured) Complete'[Products]
+			VAR hectare = 'Inventory (Structured) Complete'[Ha]
+			VAR quantity = 
+			    SWITCH(
+			        TRUE(),
+			        product = "Thread (Pieces)", 10,
+			        product = "Total Urea (50kg)", 5,
+			        product = "Urea Notore (50kg)", 5,
+			        product = "Needle (Pieces)", 10,
+			        product = "Empty Sack (100kg)", 30,
+			        product = "NPS (50kg)", 3,
+			        product = "Herbicide Terazine (1L)", 2,
+			        product = "Herbicide Nicoshield (1L)", 2,
+			        product = "Maize Seed SM15C Assembly Bag 24 (12.5kg)", 2,
+			        product = "Maize Seed Sammaz 15 Foundation (25kg)", 1,
+			        product = "Maize Seed Sammaz 51 Foundation (25kg)", 1,
+			        product = "Maize Seed Sammaz 51 Certified (25kg)", 1,
+			        0  // default if no match
+			    )
+			VAR calc = hectare * quantity
+			RETURN calc
+			```
+		lineageTag: 36bffdf6-729a-4e29-8cb1-cfc1b61a60d5
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column primary_key
+		dataType: string
+		lineageTag: 065ade26-2eef-42a0-9ecf-ef8d8eff187c
+		summarizeBy: none
+		sourceColumn: primary_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ha
+		dataType: double
+		lineageTag: fc101113-a3a9-43f6-80af-e335db46c163
+		summarizeBy: sum
+		sourceColumn: Ha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Inventory (Structured) Complete' = m
+		mode: import
+		queryGroup: LML
+		source =
+				let
+				    Source = GoogleBigQuery.Database(),
+				    #"babbangona-prod" = Source{[Name="babbangona-prod"]}[Data],
+				    odoo_data_Schema = #"babbangona-prod"{[Name="odoo_data",Kind="Schema"]}[Data],
+				    inventory_reports_Table = odoo_data_Schema{[Name="inventory_reports",Kind="Table"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(inventory_reports_Table, each [product] = "[P1001532003] Herbicide_Nicoshield_1L" or [product] = "[P1001536003] Herbicide_Terazine_1L" or [product] = "[P4038110065] Empty Sack_Empty Sack_100kg" or [product] = "[P4039111013] Needle_Needle_Pieces" or [product] = "[P4045136013] Thread_Thread_Pieces" or [product] = "[P5052144063] Urea_Indorama_50kg" or [product] = "[P5052145063] Urea_Notore_50kg" or [product] = "[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg" or [product] = "[P8067614065] Maize Seed_SM15C_12.5kg_24_Assembly_Bag" or [product] = "[P8072615064] Maize Seed_Sammaz 51 Foundation_25kg_Bag" or [product] = "[P8072614064] Maize Seed_Sammaz 15 Foundation_25kg_Bag" or [product] = "[P8072617064] Maize Seed_Sammaz 51 Certified_25kg_Bag" or [product] = "[P5170957063] NPS_Max Yield_50kg" or [product] = "[P8072616064] Maize Seed_Sammaz 15 Certified_25kg_Bag"),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Filtered Rows", "location", "location - Copy"),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Duplicated Column", "location - Copy", Splitter.SplitTextByDelimiter("/", QuoteStyle.Csv), {"location - Copy.1", "location - Copy.2", "location - Copy.3"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"location - Copy.1", type text}, {"location - Copy.2", type text}, {"location - Copy.3", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"location - Copy.1", "Hub"}, {"location - Copy.3", "ID Location"}}),
+				    #"Added Conditional Column1" = Table.AddColumn(#"Renamed Columns", "ID Location 2", each if [Hub] = "TW" then "TW" else [ID Location]),
+				    #"Filtered Rows1" = Table.SelectRows(#"Added Conditional Column1", each ([ID Location 2] <> null)),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Filtered Rows1",{"ID Location"}),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Removed Columns3",{{"ID Location 2", "ID Location"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns3",{{"ID Location", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type2",{"location - Copy.2"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Removed Columns", each [Hub] = "Funtua" or [Hub] = "Garba Chede" or [Hub] = "Giwa" or [Hub] = "Igabi" or [Hub] = "Ikara" or [Hub] = "Karaye" or [Hub] = "Lere" or [Hub] = "Soba" or [Hub] = "Toro" or [Hub] = "TW"),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Filtered Rows2",{"id"}),
+				    #"Uppercased Text" = Table.TransformColumns(#"Removed Columns1",{{"ID Location", Text.Upper, type text}}),
+				    #"Replaced Value11" = Table.ReplaceValue(#"Uppercased Text","[P5052144063] Urea_Indorama_50kg","Total Urea (50kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Replaced Value11","[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg","NPS (50kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","[P4045136013] Thread_Thread_Pieces","Thread (Pieces)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","[P1001536003] Herbicide_Terazine_1L","Herbicide Terazine (1L)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","[P4039111013] Needle_Needle_Pieces","Needle (Pieces)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","[P4038110065] Empty Sack_Empty Sack_100kg","Empty Sack (100kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","[P5052145063] Urea_Notore_50kg","Total Urea (50kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","[P1001532003] Herbicide_Nicoshield_1L","Herbicide Nicoshield (1L)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","[P8067614065] Maize Seed_SM15C_12.5kg_24_Assembly_Bag","Maize Seed SM15C Assembly Bag 24 (12.5kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag","Maize Seed Sammaz 15 (12.5kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value8","[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag","Maize Seed Sammaz 51 (12.5kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9","[P8072614064] Maize Seed_Sammaz 15 Foundation_25kg_Bag","Maize Seed Sammaz 15 Foundation (25kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Value10","[P8072615064] Maize Seed_Sammaz 51 Foundation_25kg_Bag","Maize Seed Sammaz 51 Foundation (25kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value13" = Table.ReplaceValue(#"Replaced Value12","[P8072617064] Maize Seed_Sammaz 51 Certified_25kg_Bag","Maize Seed Sammaz 51 Certified (25kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value15" = Table.ReplaceValue(#"Replaced Value13","[P5170957063] NPS_Max Yield_50kg","NPS (50kg)",Replacer.ReplaceText,{"product"}),
+				    #"Replaced Value18" = Table.ReplaceValue(#"Replaced Value15","[P8072616064] Maize Seed_Sammaz 15 Certified_25kg_Bag","Maize Seed Sammaz 15 Certified (25kg)",Replacer.ReplaceText,{"product"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Replaced Value18", "available_qty", each if [product] = "Maize Seed Sammaz 15 Certified (25kg)" then [available_quantity]*2 else [available_quantity]),
+				    #"Replaced Value14" = Table.ReplaceValue(#"Added Conditional Column","Maize Seed Sammaz 15 Certified (25kg)","Maize Seed SM15C Assembly Bag 24 (12.5kg)",Replacer.ReplaceText,{"product"}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Replaced Value14",{"available_quantity"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Removed Columns2",{{"available_qty", "available_quantity"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"available_quantity", type number}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed Type1", {"ID Location"}, #"Store Hectare Size", {"Store"}, "Store Hectare Size", JoinKind.LeftOuter),
+				    #"Expanded Store Hectare Size" = Table.ExpandTableColumn(#"Merged Queries", "Store Hectare Size", {"Ha", "SM15C 12.5kg Need", "SM15F 25kg Ha Distribution ", "SM51C 25kg Ha Distribution ", "SM51F 25kg Ha Distribution "}, {"Store Hectare Size.Ha", "Store Hectare Size.SM15C 12.5kg Need", "Store Hectare Size.SM15F 25kg Ha Distribution ", "Store Hectare Size.SM51C 25kg Ha Distribution ", "Store Hectare Size.SM51F 25kg Ha Distribution "}),
+				    #"Added Conditional Column2" = Table.AddColumn(#"Expanded Store Hectare Size", "Ha", each if [product] = "Maize Seed SM15C Assembly Bag 24 (12.5kg)" then [Store Hectare Size.SM15C 12.5kg Need] else if [product] = "Maize Seed Sammaz 15 Foundation (25kg)" then [#"Store Hectare Size.SM15F 25kg Ha Distribution "] else if [product] = "Maize Seed Sammaz 51 Foundation (25kg)" then [#"Store Hectare Size.SM51F 25kg Ha Distribution "] else if [product] = "Maize Seed Sammaz 51 Certified (25kg)" then [#"Store Hectare Size.SM51C 25kg Ha Distribution "] else [Store Hectare Size.Ha]),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Added Conditional Column2",{"location", "product", "row_hash", "Hub", "ID Location", "available_quantity", "Ha"}),
+				
+				    #"Added Custom" = Table.AddColumn(#"Removed Other Columns", "primary_key", each [ID Location]&"_"&[product]),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom",{{"primary_key", type text}}),
+				    #"Removed Columns4" = Table.RemoveColumns(#"Changed Type3",{"location", "row_hash"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Removed Columns4",{{"ID Location", "ID Warehouses"}, {"product", "Products"}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Hub", "ID Warehouses", "Products", "primary_key", "available_quantity", "Ha"}),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Reordered Columns",{{"Ha", type number}}),
+				    #"Appended Query" = Table.Combine({#"Changed Type4", #"Individual Stores"}),
+				    #"Removed Columns5" = Table.RemoveColumns(#"Appended Query",{"Store"}),
+				    #"Replaced Value16" = Table.ReplaceValue(#"Removed Columns5",null,0,Replacer.ReplaceValue,{"available_quantity"}),
+				    #"Replaced Value17" = Table.ReplaceValue(#"Replaced Value16",null,0,Replacer.ReplaceValue,{"Ha"}),
+				    #"Grouped Rows" = Table.Group(#"Replaced Value17", {"ID Warehouses", "Products"}, {{"Hub", each List.Max([Hub]), type nullable text}, {"primary_key", each List.Max([primary_key]), type nullable text}, {"available_quantity", each List.Sum([available_quantity]), type nullable number}, {"Ha", each List.Max([Ha]), type nullable number}})
+				in
+				    #"Grouped Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

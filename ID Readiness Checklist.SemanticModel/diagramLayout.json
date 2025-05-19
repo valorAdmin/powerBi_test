@@ -1,0 +1,269 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 2700.7709965439403,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 14.279945173365306,
+            "y": 401.26981140955445
+          },
+          "nodeIndex": "members_entity",
+          "nodeLineageTag": "9bd193ff-56c5-463a-9799-8db2b0be12bc",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1415.7706291026886,
+            "y": 0
+          },
+          "nodeIndex": "Refresh Date",
+          "nodeLineageTag": "4b8bfa54-fda9-4a43-8098-894639962a83",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 409.43001370665871,
+            "y": 7.90050574276054
+          },
+          "nodeIndex": "Combined TG",
+          "nodeLineageTag": "0082f903-bb00-41cc-98d9-410ab6c341b7",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1111.2917332320446,
+            "y": 0
+          },
+          "nodeIndex": "Measure",
+          "nodeLineageTag": "1eee6f4f-bf1a-43d8-bcc5-f6e4afdddc45",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1082.4317058187271,
+            "y": 452.58346646408904
+          },
+          "nodeIndex": "confirmed_deposits_entity",
+          "nodeLineageTag": "465f2401-69bf-433c-bb40-26d77ee81d6a",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 382.02869027076395,
+            "y": 478.7706480112887
+          },
+          "nodeIndex": "tgl_approval_status_entity",
+          "nodeLineageTag": "00b24ae8-1a8b-4b91-9f83-74609cdf09e3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 680.56562326732274,
+            "y": 473.1247813952665
+          },
+          "nodeIndex": "up_front_balance",
+          "nodeLineageTag": "72946bd6-cc3f-43ab-903f-ba28a094cd62",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1685.4906839293233,
+            "y": 325.38532400564435
+          },
+          "nodeIndex": "valid_id_cards",
+          "nodeLineageTag": "8b41b4a7-54c5-4278-9ec8-1aa6b7e32958",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1955.2107387559579,
+            "y": 325.38532400564435
+          },
+          "nodeIndex": "complete_members_entity",
+          "nodeLineageTag": "f52779b5-5a05-47ba-a28a-4b59c61ab41f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2239.2107387559581,
+            "y": 325.38532400564435
+          },
+          "nodeIndex": "members_entity (2)",
+          "nodeLineageTag": "5bdb0fac-426b-48e6-96f7-c0e700381e0f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2508.9307935825927,
+            "y": 239.38532400564435
+          },
+          "nodeIndex": "Inventory",
+          "nodeLineageTag": "d29d7f9d-69e1-4b6e-a05e-2a118bc13418",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2832.3742874599993,
+            "y": 24.525296592327038
+          },
+          "nodeIndex": "LML Measures",
+          "nodeLineageTag": "ae51f3e1-b82c-4ca4-8f56-700cb13c09eb",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3048.370903235862,
+            "y": 289.38532400564435
+          },
+          "nodeIndex": "Inventory (Structured)",
+          "nodeLineageTag": "80daf923-dd8f-4cb3-b297-e977f58e4136",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3017.5557967612626,
+            "y": 619.92494682475331
+          },
+          "nodeIndex": "Individual Stores",
+          "nodeLineageTag": "d380fd3d-b027-407e-aac4-ffb1a3af40ff",
+          "size": {
+            "height": 257.61638201213293,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3318.0909580624966,
+            "y": 364.77444580914278
+          },
+          "nodeIndex": "products",
+          "nodeLineageTag": "bb809683-8d29-429f-b526-dbaeb6d12b5e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3587.8110128891312,
+            "y": 288.77066441844312
+          },
+          "nodeIndex": "Operator_Details",
+          "nodeLineageTag": "d0868968-5c02-4ddf-9f86-6b83d1b51f65",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3857.5310677157659,
+            "y": 314.77066441844312
+          },
+          "nodeIndex": "operator_store",
+          "nodeLineageTag": "ce33635b-30c3-42f0-abd8-a35fa5530f83",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4127.2511225424005,
+            "y": 338.77066441844312
+          },
+          "nodeIndex": "Combined TG(All TGs)",
+          "nodeLineageTag": "b3f2a64e-834f-466e-b38d-1070dc8c9802",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4396.9711773690351,
+            "y": 302.77066441844312
+          },
+          "nodeIndex": "Inventory (Structured) Complete",
+          "nodeLineageTag": "ec9d899a-0ba9-4d2d-a34f-cfea3ba35f08",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 44.905697313104028,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

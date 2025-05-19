@@ -1,0 +1,618 @@
+table Measure
+	lineageTag: 1eee6f4f-bf1a-43d8-bcc5-f6e4afdddc45
+
+	measure 'New TGs' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[TG Status]="New TG")+0
+		formatString: 0
+		lineageTag: f3de6d10-051e-45fa-a0a8-a5998e7e57c1
+
+	measure 'Returning TGs' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[TG Status]="Returning TG")+0
+		formatString: 0
+		lineageTag: 88665bd8-710a-4f26-a93f-a429eefb9ca5
+
+	measure 'TGS not paid upfront' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[Upfront Status]="No")+0
+		formatString: 0
+		lineageTag: 4056911e-42ca-4e58-a706-48c1d44ecea8
+
+	measure 'TGs with Complete TFM' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[TFM Complete Status]="Yes")+0
+		formatString: 0
+		lineageTag: 5739b1bc-68ef-4e31-bd83-96f832d583df
+
+	measure 'TGS with duplicate phone number' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Duplicate Phone Number]<>"No")+0
+		formatString: 0
+		lineageTag: 7e422377-44c5-44cc-8333-0751a1315cd2
+
+	measure 'TGs with Incomplete TFM' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[TFM Complete Status]="No")+0
+		formatString: 0
+		lineageTag: f69211a3-3d56-4a89-8340-df4f1d29c587
+
+	measure 'TGs with out Entrepreneur Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Entrepreneur clearance]<>"Yes")+0
+		formatString: 0
+		lineageTag: df740b9f-a99f-44b1-9810-3c831854b4c6
+
+	measure 'TGs with out Operator Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Operator clearance]<>"Yes")+0
+		formatString: 0
+		lineageTag: 2f5f7875-83a3-465a-ad2f-5e9672afd27e
+
+	measure 'TGS with out Valid BVN' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Valid BVN]="No")+0
+		formatString: 0
+		lineageTag: 0aca2785-09f4-4815-b6bb-148203f2fd15
+
+	measure 'TGs without CHA' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[TGL Approval Status]="No")+0
+		formatString: 0
+		lineageTag: 7873101d-8cd1-45c2-a07b-e639b7398e58
+
+	measure 'TGs without TGL Phone Number Verification' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[TGL Phone Number Verification]<>"Yes")+0
+		formatString: 0
+		lineageTag: fa5bc0cb-7039-4c1b-9df3-40306d4b7f39
+
+	measure 'Total TGs' = DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number])+0
+		formatString: 0
+		lineageTag: c50d8ae4-4c98-42fe-8aec-c9b3a478ba37
+
+	measure '% TGs Not Paid Upfront' = DIVIDE([TGS not paid upfront],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b734ee16-87f0-4355-b329-d47c81e151e6
+
+	measure '% TGs with Complete TFM' = DIVIDE([TGs with Complete TFM],[Total TGs])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 49d055af-fb5d-455c-bc18-ecf1d9e2c403
+
+	measure '% TGs with duplicate phone number' = DIVIDE([TGS with duplicate phone number],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2dfb4a82-2903-4a21-8fec-a807a4ba4f06
+
+	measure '% TGs with Incomplete TFM' = DIVIDE([TGs with Incomplete TFM],[Total TGs])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 61f82183-b2f0-461d-9cb8-d6f8dad0bf57
+
+	measure '% TGs with incomplete TGL phone number verification' = DIVIDE([TGs without TGL Phone Number Verification],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 355b968a-e979-4985-9485-a39a8963e8bc
+
+	measure '% TGs without CHA' = DIVIDE([TGs without CHA],[New TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 67ac481b-b5ce-410d-aa91-12fa0e3e868c
+
+	measure '% TGs without Entrepreneur Clearance' = DIVIDE([TGs with out Entrepreneur Clearance],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4bc5dae0-3543-49c3-9963-e32cfc957b07
+
+	measure '% TGs without Operator Clearance' = DIVIDE([TGs with out Operator Clearance],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: add8bbfc-5d2e-4f36-b513-be5dde70ece4
+
+	measure '% TGs without Valid BVN' = DIVIDE([TGS with out Valid BVN],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: df3bd590-4267-4112-8697-1ca320cca82b
+
+	measure 'TGS Paid Upfront' = ```
+			
+			VAR ValidStatus = 
+			    FILTER(
+			        'Combined TG',
+			        'Combined TG'[Upfront Status] = "Yes" || 'Combined TG'[Upfront Status] = "N/A"
+			    )
+			RETURN
+			    CALCULATE(
+			        DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),
+			        ValidStatus
+			    ) + 0
+			
+			```
+		formatString: 0
+		lineageTag: e6766d25-6ccc-4715-bc55-f097439a4bb6
+
+	measure '% TGs Paid Upfront' = DIVIDE([TGS Paid Upfront],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6b2f5288-c452-4807-afbc-501fb64b4197
+
+	measure 'TGs with CHA' = ```
+			
+			CALCULATE(
+			    DISTINCTCOUNT('Combined TG'[TG IK Number]), 
+			    'Combined TG'[TGL Approval Status] ="Yes"
+			) + 0
+			
+			```
+		formatString: 0
+		lineageTag: be59335d-5c80-4d4d-935f-59ec33c61a70
+
+	measure '% TGs with CHA' = DIVIDE([TGs with CHA],[New TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ce297830-b818-4e6f-98d4-3801bdef3d0b
+
+	measure 'TGs with TGL Phone Number Verification' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[TGL Phone Number Verification]="Yes")+0
+		formatString: 0
+		lineageTag: 39491a65-7fff-4147-acdd-21e002770dbd
+
+	measure '% TGs with complete TGL phone number verification' = DIVIDE([TGs with TGL Phone Number Verification],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c8e291b8-e98d-43f3-a85e-800f38a4450d
+
+	measure Measure
+		lineageTag: 0e51418a-917e-4d27-b1fe-b70aa939433e
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'TGS with Valid BVN' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Valid BVN]<>"No")+0
+		formatString: 0
+		lineageTag: 1ff3175f-fecd-4eb6-b199-857ef31597c9
+
+	measure '% TGs with Valid BVN' = DIVIDE([TGS with Valid BVN],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3131d5c7-6919-4a67-adb1-ff536a2a1cd6
+
+	measure 'TGs with OFO Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[OFO Clearance]="Yes")+0
+		formatString: 0
+		lineageTag: ab2b2ac3-3e12-4dde-966d-2327164d67e8
+
+	measure '% TGs with OFO Clearance' = DIVIDE([TGs with OFO Clearance],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6fb70e99-d0e2-4bc2-80b9-3e08f46cef14
+
+	measure 'TGs with Entrepreneur Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Entrepreneur clearance]="Yes")+0
+		formatString: 0
+		lineageTag: ef28d53e-2703-41d3-a783-b44f7850fcc9
+
+	measure '% TGs with Entrepreneur Clearance' = DIVIDE([TGs with Entrepreneur Clearance],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a5925b66-3b10-4179-9931-4652396cdea2
+
+	measure 'TGs with Operator Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Operator clearance]="Yes")+0
+		formatString: 0
+		lineageTag: 4cd062d7-28c3-4507-8ef4-831d4cf01108
+
+	measure '% TGs with Operator Clearance' = DIVIDE([TGs with Operator Clearance],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: cac1920a-bb55-4c1c-91ba-de793a02c1e5
+
+	measure 'TGS with Valid ID Card' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Valid ID Card]="Yes")+0
+		formatString: 0
+		lineageTag: ff711c0d-18a8-4525-b031-d2f523352afa
+
+	measure '% TGs with Valid ID Card' = DIVIDE([TGS with Valid ID Card],[New TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e8c1f466-5398-4aea-8064-f53b09da63fe
+
+	measure 'TGS without duplicate phone number' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Duplicate Phone Number]="No")+0
+		formatString: 0
+		lineageTag: ef3e3909-efd9-4b87-98dc-ad5fcfa7a562
+
+	measure '% TGs without duplicate phone number' = DIVIDE([TGS without duplicate phone number],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 30ca8892-acd9-412f-8b05-64b6946c1d86
+
+	measure 'TGS with BVN Record' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[TGL BVN Record]="Yes")+0
+		formatString: 0
+		lineageTag: b92ec600-a1d3-4446-86aa-d31c212e3ef0
+
+	measure '% TGs with BVN Record' = DIVIDE([TGS with BVN Record],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 41a10e98-d7f3-4762-a9c9-9e0ff9db5b1f
+
+	measure 'TGS with out BVN Record' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[TGL BVN Record]<>"Yes")+0
+		formatString: 0
+		lineageTag: 64482389-1b51-4b32-bd2a-18f0b3d2ae52
+
+	measure '% TGs without BVN Record' = DIVIDE([TGS with out BVN Record],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 35424d88-aeb7-4359-952a-c57c649f04d9
+
+	measure 'yes/no background color' = ```
+			
+			
+			VAR tfm_status = SELECTEDVALUE('Combined TG'[TFM Complete Status])
+			VAR upfront= SELECTEDVALUE('Combined TG'[Upfront Status])
+			VAR community_head_approval =SELECTEDVALUE('Combined TG'[TGL Approval Status])
+			VAR TGL_phone_number_verification=SELECTEDVALUE('Combined TG'[TGL Phone Number Verification])
+			VAR duplicate_phone_number=SELECTEDVALUE('Combined TG'[Duplicate Phone Number])
+			
+			
+			
+			VAR red_color_code="red"
+			VAR green_color_code="green"
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    upfront = "Yes", green_color_code,
+			    upfront = "No", red_color_code,
+			
+			    tfm_status = "Yes", green_color_code,
+			    tfm_status = "No", red_color_code,
+			
+			
+			    community_head_approval = "Yes", green_color_code,
+			    community_head_approval = "Not Applicable", green_color_code,
+			    community_head_approval = "No", red_color_code,
+			
+			    TGL_phone_number_verification = "Yes", green_color_code,
+			    TGL_phone_number_verification = "No", red_color_code,
+			
+			    duplicate_phone_number = "Yes", green_color_code,
+			    duplicate_phone_number = "No", red_color_code,
+			
+			
+			
+			
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: c01a07a9-2b6a-45c6-9a9d-2d78e7aed913
+
+	measure format_tfm_status = ```
+			
+			
+			VAR tfm_status = SELECTEDVALUE('Combined TG'[TFM Complete Status])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    tfm_status = "Yes", [color_code_green],
+			    tfm_status = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: a1aba487-0c16-47b6-92dc-23f18331bb94
+
+	measure color_code_green = "#C4FDC4" --"#80CBC4"
+		lineageTag: 2747cf79-5d3c-4652-b5cf-3e51c56a1a1a
+
+	measure color_code_red = "#FFCACA" --"#EF9A9A"
+		lineageTag: 0bd35536-c0d6-4b09-857f-c1ba8b940cd1
+
+	measure format_upfront_status = ```
+			
+			
+			VAR upfront_status = SELECTEDVALUE('Combined TG'[Upfront Status])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    upfront_status = "Yes", [color_code_green],
+			    upfront_status = "N/A", [color_code_green],
+			    upfront_status = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: e766e33f-107b-421c-aaa5-c6003a3a08dd
+
+	measure format_community_head_approval = ```
+			
+			
+			VAR community_head_approval = SELECTEDVALUE('Combined TG'[TGL Approval Status])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    community_head_approval = "Yes", [color_code_green],
+			    community_head_approval = "N/A", [color_code_green],
+			    community_head_approval = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: e4bb1ba5-b321-4490-9f72-3bec5c2f4250
+
+	measure format_tgl_phone_number_verification = ```
+			
+			
+			VAR tgl_phone_number_verification = SELECTEDVALUE('Combined TG'[TGL Phone Number Verification])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    tgl_phone_number_verification = "Yes", [color_code_green],
+			    tgl_phone_number_verification = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: a7473912-6262-45f5-b657-c89f82021e46
+
+	measure format_duplicate_phone_number = ```
+			
+			
+			VAR tgl_duplicate_phone_number = SELECTEDVALUE('Combined TG'[Duplicate Phone Number])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    tgl_duplicate_phone_number = "No", [color_code_green],
+			    tgl_duplicate_phone_number = "Yes", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: 49804baa-43cb-4c1a-bab0-06adf6346d3d
+
+	measure format_verified_bvn = ```
+			
+			
+			VAR verified_bvn = SELECTEDVALUE('Combined TG'[Valid BVN])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    verified_bvn = "Yes", [color_code_green],
+			     verified_bvn = "N/A", [color_code_green],
+			    verified_bvn = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: e988a138-e473-4134-9917-2f708cd2d6b2
+
+	measure format_bvn_record = ```
+			
+			
+			VAR bvn_record = SELECTEDVALUE('Combined TG'[TGL BVN Record])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    bvn_record = "Yes", [color_code_green],
+			    bvn_record = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: f2d333b3-089c-42ea-9d13-e6c199a5e732
+
+	measure format_valid_id_card =
+			
+			
+			VAR valid_id_card = SELECTEDVALUE('Combined TG'[Valid ID Card])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    valid_id_card = "Yes", [color_code_green],
+			    valid_id_card = "N/A", [color_code_green],
+			    valid_id_card = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: 899911bf-938c-4609-8693-95eb790b5df7
+
+	measure format_ofo_clearance =
+			
+			
+			VAR format_ofo_clearance = SELECTEDVALUE('Combined TG'[OFO Clearance])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    format_ofo_clearance = "Yes", [color_code_green],
+			    format_ofo_clearance = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: 3e6ff89b-8fa9-4b1e-beb9-5da49480c352
+
+	measure format_entrepreneur_clearance =
+			
+			
+			VAR format_entrepreneur_clearance = SELECTEDVALUE('Combined TG'[Entrepreneur clearance])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    format_entrepreneur_clearance = "Yes", [color_code_green],
+			    format_entrepreneur_clearance = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: bc2d8364-1c17-419e-b0d8-133c25fe111b
+
+	measure format_operator_clearance =
+			
+			
+			VAR format_operator_clearance = SELECTEDVALUE('Combined TG'[Operator clearance])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    format_operator_clearance = "Yes", [color_code_green],
+			    format_operator_clearance = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: 79a03459-d4c5-47d9-bb96-e8b23cac055d
+
+	measure format_tg_readiness = ```
+			
+			
+			VAR tg_readiness = SELECTEDVALUE('Combined TG'[% TG Readiness])
+			VAR range_3= if(AND(tg_readiness<=0.5,tg_readiness>=0),[color_code_red],"white")
+			VAR range_2= if(AND(tg_readiness<0.9,tg_readiness>0.5),[color_code_yellow],range_3)
+			VAR range_1= if(AND(tg_readiness<1,tg_readiness>=0.9),[color_code_green_light],range_2)
+			
+			RETURN if(tg_readiness=1,[color_code_green],range_1)
+			
+			/*VAR check = SWITCH(
+			    TRUE(),
+			    tg_readiness = "Yes", [color_code_green],
+			    tg_readiness = "Yes", [color_code_green],
+			    tg_readiness = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check */
+			
+			```
+		lineageTag: 3fa08cde-8a98-42fd-acfd-831552b23d4a
+
+	measure color_code_yellow = "#FFF59D"
+		lineageTag: 1b530a51-ca48-4746-b367-fc7f63419400
+
+	measure color_code_green_light = "#E0F2F1"
+		lineageTag: 095bdc3d-f967-4343-a954-c5b0254fac37
+
+	measure 'ID ready TGs' = CALCULATE(DISTINCTCOUNTNOBLANK('Combined TG'[TG IK Number]),'Combined TG'[% TG Readiness]>=1)+0
+		formatString: 0
+		lineageTag: 9200969d-6507-4d00-8997-326d7eeccd06
+
+	measure '% TGs Ready for ID' = Divide([ID ready TGs],[Total TGs])+0
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0842f315-00db-400e-8214-17463efa6b61
+
+	measure '% Average TG Readiness' = AVERAGE('Combined TG'[% TG Readiness])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c5f9792d-44f5-49ca-83a3-d972acd168c4
+
+	measure format_operator_store = ```
+			
+			
+			VAR operator_store = SELECTEDVALUE('Combined TG'[Operator Store Registeration])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    operator_store = "Yes", [color_code_green],
+			    operator_store = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+			
+			```
+		lineageTag: 025c2258-8218-4c45-a1e0-7cb5ec496904
+
+	measure 'TGs with Registered Operator Store' = CALCULATE(COUNT('Combined TG'[TG IK Number]),'Combined TG'[Operator Store Registeration]="Yes")+0
+		formatString: 0
+		lineageTag: a02ba8af-e89e-4f25-b460-267931e150db
+
+	measure '% TGs with Registered Operator Store' = ```
+			DIVIDE([TGs with Registered Operator Store],[Total TGs]) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 9b759023-4d48-4d75-8f14-8552c6941a31
+
+	measure 'Ready TG' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[% TG Readiness]>=1)+0
+		formatString: 0
+		lineageTag: eb7d0768-3413-4cf8-b89c-1f191ebb401d
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'TGS with out Valid ID Card' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[Valid ID Card]="No")+0
+		formatString: 0
+		lineageTag: 9964505d-d07b-4fd6-b3aa-9d197ef47b1e
+
+	measure 'TGs with out Registered Operator Store' = CALCULATE(COUNT('Combined TG'[TG IK Number]),'Combined TG'[Operator Store Registeration]<>"Yes")+0
+		formatString: 0
+		lineageTag: 0ac82bfa-c0db-4db7-a359-48505106989f
+
+	measure 'Operator TGs to max out' =
+			//sum(Operator_Details[TGs to Max Out])
+			VAR operator_max_out_tgs= CALCULATE(SUM('Operator_Details'[Max Out TGs]),USERELATIONSHIP('Combined TG'[Operator ID],Operator_Details[Operator ID]))
+			VAR complete_tgs=CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[TFM Complete Status]="Yes")
+			VAR tg_to_max_out=operator_max_out_tgs-complete_tgs
+			//VAR operator_type= 'Operator_Details'[Operator Type]
+			//VAR calc= IF(operator_type="Company OP",0,
+			 //           IF(complete_tgs>operator_max_out_tgs,0,tg_to_max_out))
+			
+			RETURN operator_max_out_tgs
+		formatString: 0
+		lineageTag: a77bc01f-5ff7-4fd5-978e-eb277657c0d2
+
+	measure '% TGs Ready for ID (Operator)' =
+			
+			VAR target_tg= SUM(Operator_Details[Adj Max Out TGs])
+			VAR total_tg=[Total TGs]//SUM(Operator_Details[Complete TGs])
+			VAR tg_check= IF(target_tg>=total_tg,target_tg,total_tg)
+			VAR id_ready_tgs=[ID ready TGs]
+			VAR calc= DIVIDE(id_ready_tgs,target_tg)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6e5b37fb-3ba0-4d1f-a1f5-5d6eb3577b26
+
+	measure 'ID ready Operators' = ```
+			
+			VAR operator_readiness = 
+			    SUMMARIZE(
+			        'Combined TG', 
+			        'Combined TG'[Operator ID], 
+			        "OperatorReadiness", [% TGs Ready for ID]
+			    )
+			
+			VAR complete_operators = 
+			    COUNTROWS(
+			        FILTER(operator_readiness, [OperatorReadiness] >= 1)
+			    )
+			
+			RETURN complete_operators+0
+			
+			```
+		formatString: 0
+		lineageTag: c29e80a7-1a41-4b07-abf2-780ac2c5b038
+
+	measure 'Measure 3'
+		lineageTag: 911cc0c1-ba08-47a8-88f0-ec97f935a0c3
+
+	measure format_operator_maxout =
+			
+			
+			VAR operator_maxout = SELECTEDVALUE('Combined TG'[Operator Max Out])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    operator_maxout = "Yes", [color_code_green],
+			    operator_maxout = "No", [color_code_red],
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: b04aaab8-9f4c-4ee1-8398-1e13be445263
+
+	measure format_bvn_required =
+			
+			
+			VAR bvn_required = SELECTEDVALUE('Combined TG'[Combined TG(All TGs).BVN Required])
+			
+			VAR check = SWITCH(
+			    TRUE(),
+			    bvn_required = "Yes",[color_code_red],
+			    bvn_required = "No", [color_code_green] ,
+			    "white" // Default color if neither condition is met
+			)
+			
+			RETURN check
+		lineageTag: dc2d5525-adc2-449a-9a7c-42e730ba0198
+
+	measure 'TGs with out OFO Clearance' = CALCULATE(DISTINCTCOUNT('Combined TG'[TG IK Number]),'Combined TG'[OFO Clearance]<>"Yes")+0
+		formatString: 0
+		lineageTag: cc035689-4152-4664-b439-4d47b82a7190
+
+	column Column1
+		dataType: string
+		lineageTag: 274a329c-5251-4679-b146-b62c9aa4145b
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measure = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

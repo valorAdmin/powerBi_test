@@ -1,0 +1,52 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup LML
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'BVN Check'
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation PBI_QueryOrder = ["members_entity","confirmed_deposits_entity","tgl_approval_status_entity","member_info_entity","successful_bvn_validation","failed_bvn_validation","bvn_name_validation","bvn_details","member_generated_rf_entity","ofo_clearance","clearance","bad clearance videos","id card error","Refresh Date","tgl_ID_card_validation","TGs in Good Standing","Combined TG","Measure","up_front_balance","valid_id_cards","operator_store","complete_members_entity","members_entity (2)","Store Location","Inventory","Store Hectare Size","LML Measures","Inventory (Structured)","Inventory (Structured) (2)","products","Individual Stores","Operator_Details","Combined TG(All TGs)","Current TGL List","Last year TGL List","Inventory (Structured) Complete"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.143.878.0 (25.05)+b20aa3b866ec1b70879135a4e60e4b1301c75b21
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table members_entity
+ref table DateTableTemplate_d5c0155a-55ba-42f0-a383-ed9067851866
+ref table 'Refresh Date'
+ref table LocalDateTable_481e1dad-4454-48c7-83a8-9af8d116918d
+ref table LocalDateTable_7788b893-e778-4b9f-b69a-ce907e751c77
+ref table 'Combined TG'
+ref table Measure
+ref table confirmed_deposits_entity
+ref table tgl_approval_status_entity
+ref table LocalDateTable_d40b83ac-e89e-43e0-8093-10dc7b084fe0
+ref table LocalDateTable_f62ea583-7c88-473f-acd2-6b85b6965b53
+ref table up_front_balance
+ref table valid_id_cards
+ref table complete_members_entity
+ref table 'members_entity (2)'
+ref table Inventory
+ref table 'LML Measures'
+ref table 'Inventory (Structured)'
+ref table 'Individual Stores'
+ref table products
+ref table Operator_Details
+ref table operator_store
+ref table 'Combined TG(All TGs)'
+ref table 'Inventory (Structured) Complete'
+
+ref cultureInfo en-US
+

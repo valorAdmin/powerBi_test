@@ -1,0 +1,119 @@
+table 'Individual Stores'
+	lineageTag: d380fd3d-b027-407e-aac4-ffb1a3af40ff
+
+	column Hub
+		dataType: string
+		lineageTag: 06a4aaba-6142-4a2b-a8b1-33009782e7d9
+		summarizeBy: none
+		sourceColumn: Hub
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ID Warehouses'
+		dataType: string
+		lineageTag: 0fc3267b-eafd-4d6c-bacc-0fa9bf84c7cd
+		summarizeBy: none
+		sourceColumn: ID Warehouses
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Quantity' = ```
+			
+			VAR product = 'Individual Stores'[Products]
+			VAR hectare = 'Individual Stores'[HA]
+			VAR quantity = 
+			    SWITCH(
+			        TRUE(),
+			        product = "Thread (Pieces)", 10,
+			        product = "Total Urea (50kg)", 5,
+			        product = "Urea Notore (50kg)", 5,
+			        product = "Needle (Pieces)", 10,
+			        product = "Empty Sack (100kg)", 30,
+			        product = "NPS (50kg)", 3,
+			        product = "Herbicide Terazine (1L)", 2,
+			        product = "Herbicide Nicoshield (1L)", 2,
+			        product = "Maize Seed SM15C Assembly Bag 24 (12.5kg)", 2,
+			        product = "Maize Seed Sammaz 15 Foundation (25kg)", 1,
+			        product = "Maize Seed Sammaz 51 Foundation (25kg)", 1,
+			        product = "Maize Seed Sammaz 51 Certified (25kg)", 1,
+			        0  // default if no match
+			    )
+			VAR calc = hectare * quantity
+			RETURN calc
+			
+			```
+		formatString: #,0
+		lineageTag: 1458895b-f07c-4d44-9db0-93612ff1bc28
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Available Quantity' = CALCULATE(sum('Inventory (Structured)'[available_quantity]))+0
+		formatString: #,0.00
+		lineageTag: d16216c1-6c43-4c71-b351-0f9b3c3e498a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Products
+		dataType: string
+		lineageTag: a3d9eb60-e084-469e-935c-e010a2975c64
+		summarizeBy: none
+		sourceColumn: Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_key
+		dataType: string
+		lineageTag: 8931e01c-657f-4c2f-af1d-9bfe393d600a
+		summarizeBy: none
+		sourceColumn: primary_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store
+		dataType: string
+		lineageTag: e3fc5483-99bb-4dfb-b40c-b4932eb40bff
+		summarizeBy: none
+		sourceColumn: Store
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ha
+		dataType: double
+		lineageTag: 00eeb0d3-9952-46c7-b010-f1fe2e466841
+		summarizeBy: none
+		sourceColumn: Ha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Individual Stores' = m
+		mode: import
+		queryGroup: LML
+		source =
+				let
+				    Source = Excel.Workbook(Web.Contents("https://sheet.zohopublic.com/sheet/published/q3f9v2d68f9ef981547a893ba48c116e1b755?download=xlsx"), null, true),
+				    #"ID Location_Sheet" = Source{[Item="ID Location",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(#"ID Location_Sheet",{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Hub", type text}, {"Supporting Warehouses", type text}, {"ID Warehouses", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"Supporting Warehouses"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Columns", {"ID Warehouses"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Duplicates", {"ID Warehouses"}, #"Store Hectare Size", {"Store"}, "Store Hectare Size", JoinKind.LeftOuter),
+				    #"Expanded Store Hectare Size" = Table.ExpandTableColumn(#"Merged Queries", "Store Hectare Size", {"Store", "Ha", "SM15C 12.5kg Need", "SM15F 25kg Ha Distribution ", "SM51C 25kg Ha Distribution ", "SM51F 25kg Ha Distribution "}, {"Store", "Ha", "SM15C 12.5kg Need", "SM15F 25kg Ha Distribution ", "SM51C 25kg Ha Distribution ", "SM51F 25kg Ha Distribution "}),
+				    #"Added Custom" = Table.AddColumn(#"Expanded Store Hectare Size", "Products", each List.Repeat(#"products",1)),
+				    #"Expanded Products" = Table.ExpandListColumn(#"Added Custom", "Products"),
+				    #"Added Custom1" = Table.AddColumn(#"Expanded Products", "primary_key", each [ID Warehouses]&"_"&[Products]),
+				    #"Added Conditional Column" = Table.AddColumn(#"Added Custom1", "correct HA", each if [Products] = "Maize Seed SM15C Assembly Bag 24 (12.5kg)" then [SM15C 12.5kg Need] else if [Products] = "Maize Seed Sammaz 15 Foundation (25kg)" then [#"SM15F 25kg Ha Distribution "] else if [Products] = "Maize Seed Sammaz 51 Foundation (25kg)" then [#"SM51F 25kg Ha Distribution "] else if [Products] = "Maize Seed Sammaz 51 Certified (25kg)" then [#"SM51C 25kg Ha Distribution "] else [Ha]),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Added Conditional Column",{"Hub", "ID Warehouses", "Store", "Products", "primary_key", "correct HA"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"correct HA", "Ha"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns",{{"Ha", type number}, {"primary_key", type text}, {"Products", type text}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

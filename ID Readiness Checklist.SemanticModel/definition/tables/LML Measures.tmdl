@@ -1,0 +1,357 @@
+table 'LML Measures'
+	lineageTag: ae51f3e1-b82c-4ca4-8f56-700cb13c09eb
+
+	measure '% NPS  (50kg) Availability' =
+			
+			VAR available= SUM(Inventory[NPS (50kg)])+0
+			VAR needed= SUM(Inventory[Needed NPS (50kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7aa0ca16-58e4-4e86-a2ed-5e2177e9e106
+
+	measure '% Empty Sack (100kg) Availability' =
+			
+			VAR available= SUM(Inventory[Empty Sack (100kg)])+0
+			VAR needed= SUM(Inventory[Needed Empty Sack (100kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0a581a01-5fb3-4159-bb5c-7e174fd255ab
+
+	measure '% Herbicide Nichoshield (1L) Availability' =
+			
+			VAR available= SUM(Inventory[Herbicide Nicoshield (1L)])+0
+			VAR needed= SUM(Inventory[Needed Herbicide Nichoshield (1L)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: da3e309b-98e3-448c-825a-cbfea62fb784
+
+	measure '% Herbicide Terazine (1L) Availability' =
+			
+			VAR available= SUM(Inventory[Herbicide Terazine (1L)])+0
+			VAR needed= SUM(Inventory[Needed Herbicide Terazine (1L)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a84fd44b-85e8-4496-b3d2-857207e1b835
+
+	measure '% Maize Seed SM15C (12.5kg) Availability' =
+			
+			VAR available= SUM(Inventory[Maize Seed SM15C (12.5kg)])+0
+			VAR needed= SUM(Inventory[Needed Maize Seed SM15C (12.5kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8a2691bf-59cb-4217-9c23-f305c4b5943a
+
+	measure '% Maize Seed Sammaz 15 (12.5kg) Availability' =
+			
+			VAR available= SUM(Inventory[Maize Seed Sammaz 15 (12.5kg)])+0
+			VAR needed= SUM(Inventory[Needed Maize Seed Sammaz 15 (12.5kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: f1da72ea-05b7-4b6a-8f61-7fa6ccec1794
+
+	measure '% Maize Seed Sammaz 51 (12.5kg) Availability' =
+			
+			VAR available= SUM(Inventory[Maize Seed Sammaz 51 (12.5kg)])+0
+			VAR needed= SUM(Inventory[Needed Maize Seed Sammaz 51 (12.5kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e2dfe060-52e5-48b8-86ee-5e8020568700
+
+	measure '% Thread (Pieces) Availability' =
+			
+			VAR available= SUM(Inventory[Thread (Pieces)])+0
+			VAR needed= SUM(Inventory[Needed Thread (Pieces)])+0
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7625edbe-3c7a-4a28-b310-cfe1ce3f2617
+
+	measure '% Needle (Pieces) Availability' =
+			
+			VAR available= SUM(Inventory[Needle (Pieces)])+0
+			VAR needed= SUM(Inventory[Needed Needle (Pieces)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c4e3823b-e3bb-464f-8174-30af667cfd2d
+
+	measure '% ID Readiness' = ```
+			
+			/*VAR available = 
+			    if(SUM(Inventory[Empty Sack (100kg)])>SUM(Inventory[Needed Empty Sack (100kg)]),SUM(Inventory[Empty Sack (100kg)]),SUM(Inventory[Needed Empty Sack (100kg)])) +
+			    SUM(Inventory[Herbicide Nicoshield (1L)]) +
+			    SUM(Inventory[Herbicide Terazine (1L)]) +
+			    SUM(Inventory[Maize Seed Sammaz 15 (12.5kg)]) +
+			    SUM(Inventory[Maize Seed Sammaz 51 (12.5kg)]) +
+			    SUM(Inventory[Maize Seed SM15C (12.5kg)]) +
+			    SUM(Inventory[Thread (Pieces)]) +
+			    SUM(Inventory[NPS (50kg)])+
+			    SUM(Inventory[Needle (Pieces)])*/
+			
+			VAR available = 
+			    IF(SUM(Inventory[Empty Sack (100kg)]) > SUM(Inventory[Needed Empty Sack (100kg)]), 
+			        SUM(Inventory[Needed Empty Sack (100kg)]),
+			        SUM(Inventory[Empty Sack (100kg)])
+			    ) +
+			    IF(SUM(Inventory[Herbicide Nicoshield (1L)]) > SUM(Inventory[Needed Herbicide Nichoshield (1L)]),  
+			        SUM(Inventory[Needed Herbicide Nichoshield (1L)]),
+			        SUM(Inventory[Herbicide Nicoshield (1L)])
+			    ) +
+			    IF(SUM(Inventory[Herbicide Terazine (1L)]) > SUM(Inventory[Needed Herbicide Terazine (1L)]),  
+			        SUM(Inventory[Needed Herbicide Terazine (1L)]),
+			        SUM(Inventory[Herbicide Terazine (1L)])
+			    ) +
+			    IF(SUM(Inventory[Maize Seed Sammaz 15 (12.5kg)]) > SUM(Inventory[Needed Maize Seed Sammaz 15 (12.5kg)]),  
+			        SUM(Inventory[Needed Maize Seed Sammaz 15 (12.5kg)]),
+			        SUM(Inventory[Maize Seed Sammaz 15 (12.5kg)])
+			    ) +
+			    IF(SUM(Inventory[Maize Seed Sammaz 51 (12.5kg)]) > SUM(Inventory[Needed Maize Seed Sammaz 51 (12.5kg)]),  
+			        SUM(Inventory[Needed Maize Seed Sammaz 51 (12.5kg)]),
+			        SUM(Inventory[Maize Seed Sammaz 51 (12.5kg)])
+			    ) +
+			    IF(SUM(Inventory[Maize Seed SM15C (12.5kg)]) > SUM(Inventory[Needed Maize Seed SM15C (12.5kg)]),  
+			        SUM(Inventory[Needed Maize Seed SM15C (12.5kg)]),
+			        SUM(Inventory[Maize Seed SM15C (12.5kg)])
+			    ) +
+			    IF(SUM(Inventory[Thread (Pieces)]) > SUM(Inventory[Needed Thread (Pieces)]),  
+			        SUM(Inventory[Needed Thread (Pieces)]),
+			        SUM(Inventory[Thread (Pieces)])
+			    ) +
+			    IF(SUM(Inventory[NPS (50kg)]) > SUM(Inventory[Needed NPS (50kg)]),  
+			        SUM(Inventory[Needed NPS (50kg)]),
+			        SUM(Inventory[NPS (50kg)])
+			    ) +
+			    IF(SUM(Inventory[Needle (Pieces)]) > SUM(Inventory[Needed Needle (Pieces)]),  
+			        SUM(Inventory[Needed Needle (Pieces)]),
+			        SUM(Inventory[Needle (Pieces)])
+			    )
+			
+			
+			VAR Needed=
+			    SUM(Inventory[Needed Empty Sack (100kg)]) +
+			    SUM(Inventory[Needed Herbicide Nichoshield (1L)]) +
+			    SUM(Inventory[Needed Herbicide Terazine (1L)]) +
+			    SUM(Inventory[Needed Maize Seed Sammaz 15 (12.5kg)]) +
+			    SUM(Inventory[Needed Maize Seed Sammaz 51 (12.5kg)]) +
+			    SUM(Inventory[Needed Maize Seed SM15C (12.5kg)]) +
+			    SUM(Inventory[Needed Thread (Pieces)]) +
+			    SUM(Inventory[Needed NPS (50kg)])+
+			    SUM(Inventory[Needed Needle (Pieces)])
+			
+			VAR calc= DIVIDE(available,Needed)
+			
+			RETURN calc
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6e4d0332-2ecc-4764-9511-017d59b37f5b
+
+	measure '% Average ID Readiness' =
+			
+			VAR numerator= [% Empty Sack (100kg) Availability]+[% Herbicide Nichoshield (1L) Availability]+[% Herbicide Terazine (1L) Availability]+[% Maize Seed SM15C (12.5kg) Availability]+[% Maize Seed Sammaz 15 (12.5kg) Availability]+[% Maize Seed Sammaz 15 (12.5kg) Availability]+[% Needle (Pieces) Availability]+[% NPS  (50kg) Availability]+[% Thread (Pieces) Availability]+[% Urea (50kg) Availability]
+			
+			VAR denominator=10
+			VAR calc= DIVIDE(numerator,denominator)
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a5be682b-afb5-47b6-9459-4443d4f86b60
+
+	measure '% Urea (50kg) Availability' =
+			
+			VAR available= SUM(Inventory[Total Urea in Stock])+0
+			VAR needed= SUM(Inventory[Needed Urea (50kg)])+0
+			//VAR check=if(available>=needed,needed,available)
+			VAR calc= DIVIDE(available,needed)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 683935b1-7a01-4567-819d-1bf71394c5c3
+
+	measure '% available product' =
+			
+			VAR numerator= SUM('Individual Stores'[Available Quantity])+0
+			VAR denominator= SUM('Individual Stores'[Needed Quantity])+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3bf0f376-c8d2-489f-a91b-23aef4076889
+
+	measure '% Available Empty Sack (100kg)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Empty Sack (100kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Empty Sack (100kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0effdf4e-5c13-4253-8c98-a6e7d05eae92
+
+	measure '% Available NPS (50kg)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="NPS (50kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="NPS (50kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4c8f5ab1-7cb6-4194-b8f3-c41e92f2784d
+
+	measure '% Available Total Urea (50kg)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Total Urea (50kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Total Urea (50kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 5dd94bed-79e2-492b-9963-081cfe3527a9
+
+	measure '% Available Thread (Pieces)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Thread (Pieces)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Thread (Pieces)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8ff9ad04-fe41-4f7d-ad2a-92e2f03c875b
+
+	measure '% Available Herbicide Terazine (1L)' = ```
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Herbicide Terazine (1L)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Herbicide Terazine (1L)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e3f456a4-0d2e-4770-9442-b84cdd569bc9
+
+	measure '% Available Needle (Pieces)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Needle (Pieces)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Needle (Pieces)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 60a7587c-a572-4fb0-9ea8-d10a457e7e61
+
+	measure '% Available Herbicide Nicoshield (1L)' =
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Herbicide Nicoshield (1L)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Herbicide Nicoshield (1L)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 24619d4c-a18b-4378-8812-37ffb8062243
+
+	measure '% Available Maize Seed SM15C Assembly Bag (12.5kg)' = ```
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Maize Seed SM15C Assembly Bag 24 (12.5kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Maize Seed SM15C Assembly Bag 24 (12.5kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4d3af646-8875-4cd3-9852-eb51718b50b9
+
+	measure '% Available Maize Seed Sammaz 15 Foundation (25kg)' = ```
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 15 Foundation (25kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 15 Foundation (25kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 803ce1b3-dee2-47e1-9596-d65c1577724e
+
+	measure '% Available Maize Seed Sammaz 51 Foundation (25kg)' = ```
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 51 Foundation (25kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 51 Foundation (25kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2a1c646c-1fbe-43c3-8c95-37bca0c44df1
+
+	measure '% available product (all)' =
+			
+			VAR numerator= SUM('Inventory (Structured) Complete'[available_quantity])+0
+			VAR denominator= SUM('Inventory (Structured) Complete'[Needed Quantity])+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8822283e-9b6f-49ad-b877-c12e4b9db7bf
+
+	measure '% Available Maize Seed Sammaz 51 Certified (25kg)' = ```
+			
+			VAR numerator= CALCULATE(SUM('Individual Stores'[Available Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 51 Certified (25kg)")+0
+			VAR denominator= CALCULATE(SUM('Individual Stores'[Needed Quantity]), 'Individual Stores'[Products]="Maize Seed Sammaz 51 Certified (25kg)")+0
+			VAR calc= DIVIDE(numerator,denominator)+0
+			
+			RETURN calc
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 88fa9976-336e-422a-a57c-1b4f444184f9
+
+	column Column1
+		dataType: string
+		lineageTag: 5b1e8eba-36de-43de-b1fa-bd1107a2629c
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'LML Measures' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

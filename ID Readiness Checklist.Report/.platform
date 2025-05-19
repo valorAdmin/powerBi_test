@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "ID Readiness Checklist"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a443f8f3-644f-4dfd-8cda-1e9ac0c87b27"
+  }
+}

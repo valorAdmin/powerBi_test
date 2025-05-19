@@ -1,0 +1,28 @@
+table products
+	lineageTag: bb809683-8d29-429f-b526-dbaeb6d12b5e
+
+	column products
+		dataType: string
+		lineageTag: 98991099-3de2-4d4f-aba4-c8a9449695b2
+		summarizeBy: none
+		sourceColumn: products
+
+		annotation SummarizationSetBy = Automatic
+
+	partition products = m
+		mode: import
+		queryGroup: LML
+		source =
+				let
+				    Source = #"Inventory (Structured)",
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"product"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Duplicates",{{"product", "List"}}),
+				    productList = Table.Column(#"Renamed Columns", "List")  // Converts the "List" column to a list
+				in
+				    productList
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = List
+

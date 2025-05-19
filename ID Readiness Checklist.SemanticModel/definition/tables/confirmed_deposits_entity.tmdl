@@ -1,0 +1,35 @@
+table confirmed_deposits_entity
+	lineageTag: 465f2401-69bf-433c-bb40-26d77ee81d6a
+
+	column ik_number
+		dataType: string
+		lineageTag: 8adcd605-5b9b-4073-8be1-800af83c8ba9
+		summarizeBy: none
+		sourceColumn: ik_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Amount Deposited'
+		dataType: double
+		lineageTag: 33ea1a06-a157-416d-b00e-c6956ad70323
+		summarizeBy: sum
+		sourceColumn: Total Amount Deposited
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition confirmed_deposits_entity = m
+		mode: import
+		source =
+				let
+				    Source = Odbc.Query("dsn=portfolio-db", "SELECT deposit_id, operator_id, payment_claim_id, bank_name, date_of_confirmation, ik_number, amount_deposited, imei, app_version, created_at, updated_at, hub_id, status#(lf)#(tab)FROM public.confirmed_deposits_entity where status='1';"),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"amount_deposited", type number}}),
+				    #"Grouped Rows" = Table.Group(#"Changed Type", {"ik_number"}, {{"Total Amount Deposited", each List.Sum([amount_deposited]), type nullable number}})
+				in
+				    #"Grouped Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

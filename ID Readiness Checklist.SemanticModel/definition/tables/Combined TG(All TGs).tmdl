@@ -1,0 +1,68 @@
+table 'Combined TG(All TGs)'
+	lineageTag: b3f2a64e-834f-466e-b38d-1070dc8c9802
+
+	column 'TG IK Number'
+		dataType: string
+		lineageTag: 4d9306c3-29b9-4630-b673-160b70c3fbdf
+		summarizeBy: none
+		sourceColumn: TG IK Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TG Status'
+		dataType: string
+		lineageTag: 714e2cd0-259c-4496-ae2c-11ab773d8d28
+		summarizeBy: none
+		sourceColumn: TG Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Current TGL List.unique_member_id'
+		dataType: string
+		lineageTag: c51d1e59-61f2-424a-98c1-b5ee88060812
+		summarizeBy: none
+		sourceColumn: Current TGL List.unique_member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Last year TGL List.unique_member_id'
+		dataType: string
+		lineageTag: 88534241-8c58-4102-8f14-583d2f1f21f7
+		summarizeBy: none
+		sourceColumn: Last year TGL List.unique_member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'BVN Required'
+		dataType: string
+		lineageTag: cb133e78-5532-4080-8e0c-54bd03039290
+		summarizeBy: none
+		sourceColumn: BVN Required
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Combined TG(All TGs)' = m
+		mode: import
+		queryGroup: 'BVN Check'
+		source =
+				let
+				    Source = PowerPlatform.Dataflows([]),
+				    Workspaces = Source{[Id="Workspaces"]}[Data],
+				    #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc" = Workspaces{[workspaceId="5fa7be6e-9ee3-436a-8497-c9c05ce349cc"]}[Data],
+				    #"6ede87d5-bc01-406f-b272-957137900d81" = #"5fa7be6e-9ee3-436a-8497-c9c05ce349cc"{[dataflowId="6ede87d5-bc01-406f-b272-957137900d81"]}[Data],
+				    #"Combined TG_" = #"6ede87d5-bc01-406f-b272-957137900d81"{[entity="Combined TG",version=""]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(#"Combined TG_",{"TG IK Number", "TG Status"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"TG IK Number"}, #"Current TGL List", {"ik_number"}, "Current TGL List", JoinKind.LeftOuter),
+				    #"Expanded Current TGL List" = Table.ExpandTableColumn(#"Merged Queries", "Current TGL List", {"unique_member_id"}, {"Current TGL List.unique_member_id"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Expanded Current TGL List", {"TG IK Number"}, #"Last year TGL List", {"ik_number"}, "Last year TGL List", JoinKind.LeftOuter),
+				    #"Expanded Last year TGL List" = Table.ExpandTableColumn(#"Merged Queries1", "Last year TGL List", {"unique_member_id"}, {"Last year TGL List.unique_member_id"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Expanded Last year TGL List", "BVN Required", each if [TG Status] = "New TG" then "Yes" else if [Current TGL List.unique_member_id] = null then "Yes" else if [Last year TGL List.unique_member_id] = null then "Yes" else if [Current TGL List.unique_member_id] <> [Last year TGL List.unique_member_id] then "Yes" else if [Current TGL List.unique_member_id] = [Last year TGL List.unique_member_id] then "No" else "Check"),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Conditional Column",{{"BVN Required", type text}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"TG IK Number"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

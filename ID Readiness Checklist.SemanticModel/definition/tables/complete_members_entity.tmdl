@@ -1,0 +1,32 @@
+table complete_members_entity
+	lineageTag: f52779b5-5a05-47ba-a28a-4b59c61ab41f
+
+	column unique_member_id
+		dataType: string
+		lineageTag: 94b82a82-ca59-4fca-bac9-198caaa604c0
+		summarizeBy: none
+		sourceColumn: unique_member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ik_number
+		dataType: string
+		lineageTag: 3f6c3e7d-e9e6-404c-830b-c512e699d314
+		summarizeBy: none
+		sourceColumn: ik_number
+
+		annotation SummarizationSetBy = Automatic
+
+	partition complete_members_entity = m
+		mode: import
+		source =
+				let
+				    Source = Odbc.Query("dsn=recruitment-db", "SELECT unique_member_id, ik_number FROM public.members_entity;"),
+				    #"Removed Duplicates" = Table.Distinct(Source, {"unique_member_id"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

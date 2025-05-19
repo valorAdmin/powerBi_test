@@ -1,0 +1,40 @@
+table up_front_balance
+	lineageTag: 72946bd6-cc3f-43ab-903f-ba28a094cd62
+
+	column 'TG No'
+		dataType: string
+		lineageTag: 64739c6b-552f-4c34-9460-cb493a31559f
+		summarizeBy: none
+		sourceColumn: TG No
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Balance upfront'
+		dataType: double
+		lineageTag: 9fb5c075-b54f-46e7-b083-73474d27ed26
+		summarizeBy: sum
+		sourceColumn: Balance upfront
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition up_front_balance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://docs.google.com/spreadsheets/d/e/2PACX-1vS3V9sxwPAVv2uciXJDjxnvnJMbq4CGg9Hh5DUEc2h1bEp8-yIKL72hglo8jtC_pj4kBBT14c3IEjaP/pub?gid=1638837055&single=true&output=csv"),[Delimiter=",", Columns=18, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}, {"Column7", type text}, {"Column8", type text}, {"Column9", type text}, {"Column10", type text}, {"Column11", type text}, {"Column12", type text}, {"Column13", type text}, {"Column14", type text}, {"Column15", type text}, {"Column16", type text}, {"Column17", type text}, {"Column18", type text}}),
+				    #"Removed Top Rows" = Table.Skip(#"Changed Type",1),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Top Rows", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"", type text}, {"TG No", type text}, {"Hubs", type text}, {"Year of deposit", Int64.Type}, {"2023 deposits", type text}, {"2024 Deposits", Int64.Type}, {"2024 Misc Make-up", type text}, {"2025 Deposits", type text}, {"Total deposits", Int64.Type}, {"Utilized to Meet financials 2023", type text}, {"Utilized to Meet financials 2024", type text}, {"Shared 2023", type text}, {"Utilized against overpayment 2023", type text}, {"Utilized against overpayment 2024", type text}, {"Refunded", type text}, {"Total deductions", Int64.Type}, {"_1", type text}, {"Balance upfront", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type1",{"TG No", "Balance upfront"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Removed Other Columns","-","0",Replacer.ReplaceText,{"Balance upfront"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Replaced Value",{{"Balance upfront", type number}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

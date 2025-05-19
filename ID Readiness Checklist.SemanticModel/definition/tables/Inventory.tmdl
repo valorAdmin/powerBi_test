@@ -1,0 +1,296 @@
+table Inventory
+	lineageTag: d29d7f9d-69e1-4b6e-a05e-2a118bc13418
+
+	column 'ID Location'
+		dataType: string
+		lineageTag: 88d52df8-e1ec-4420-ab9a-4cac1df46cf3
+		summarizeBy: none
+		sourceColumn: ID Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hub
+		dataType: string
+		lineageTag: 54d16446-84b5-4012-906c-17b06a9dac55
+		summarizeBy: none
+		sourceColumn: Hub
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Empty Sack (100kg)'
+		dataType: double
+		lineageTag: 0fd075a7-4f6b-4052-9a35-64bce27200be
+		summarizeBy: none
+		sourceColumn: Empty Sack (100kg)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'NPS (50kg)'
+		dataType: double
+		formatString: 0
+		lineageTag: 55b67baf-268f-4db4-b440-efcfb3b1446b
+		summarizeBy: none
+		sourceColumn: NPS (50kg)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thread (Pieces)'
+		dataType: double
+		formatString: 0
+		lineageTag: 82d52827-cc19-43af-80de-d227de377a46
+		summarizeBy: none
+		sourceColumn: Thread (Pieces)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needle (Pieces)'
+		dataType: double
+		formatString: 0
+		lineageTag: b853bf3b-7c47-4e78-a2e3-e3661a460e97
+		summarizeBy: none
+		sourceColumn: Needle (Pieces)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Herbicide Terazine (1L)'
+		dataType: double
+		formatString: 0
+		lineageTag: 57c65ac5-06c7-4078-b94f-2d1b109014a6
+		summarizeBy: none
+		sourceColumn: Herbicide Terazine (1L)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Maize Seed SM15C (12.5kg)'
+		dataType: double
+		formatString: 0
+		lineageTag: b42f0b93-b7b9-47d5-892a-54f8af88a29a
+		summarizeBy: none
+		sourceColumn: Maize Seed SM15C (12.5kg)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Herbicide Nicoshield (1L)'
+		dataType: double
+		formatString: 0
+		lineageTag: 917b997d-3d00-456c-8681-6e7f59bd730f
+		summarizeBy: none
+		sourceColumn: Herbicide Nicoshield (1L)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Maize Seed Sammaz 15 (12.5kg)'
+		dataType: double
+		formatString: 0
+		lineageTag: 7ed570fc-1efe-4683-ba24-c6ec0a422c6c
+		summarizeBy: none
+		sourceColumn: Maize Seed Sammaz 15 (12.5kg)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Maize Seed Sammaz 51 (12.5kg)'
+		dataType: double
+		formatString: 0
+		lineageTag: cc3cb469-7610-46a5-b499-59c55a7f4b89
+		summarizeBy: none
+		sourceColumn: Maize Seed Sammaz 51 (12.5kg)
+
+		annotation SummarizationSetBy = Automatic
+
+	column HA
+		dataType: string
+		lineageTag: 2294f4f7-abe5-4fe9-9a7c-bae9c8997b80
+		summarizeBy: none
+		sourceColumn: HA
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Empty Sack (100kg)' =
+			
+			VAR qty_per_hectare=30
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: c01398ed-d3a9-4b25-9587-12b0533aa382
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed NPS (50kg)' =
+			
+			VAR qty_per_hectare=3
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: cd6e9690-2254-4c20-aa09-7526091221bf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Thread (Pieces)' =
+			
+			VAR qty_per_hectare=10
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 52bf8e07-95b7-4672-849d-658b3d4fddf2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Needle (Pieces)' =
+			
+			VAR qty_per_hectare=10
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: c76fc45c-233b-45e2-9802-fbd0fda10e30
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Maize Seed SM15C (12.5kg)' =
+			
+			VAR qty_per_hectare=2
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: b922711c-f82e-4c43-ae40-0db700cd286c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Maize Seed Sammaz 51 (12.5kg)' =
+			
+			VAR qty_per_hectare=2
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 46d2c85c-3d6a-43d3-ad4b-7acbf949a897
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Maize Seed Sammaz 15 (12.5kg)' =
+			
+			VAR qty_per_hectare=2
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 774cf1e7-deda-424f-b36d-d4496a3d2d4c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Herbicide Terazine (1L)' =
+			
+			VAR qty_per_hectare=2
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 1524b308-991a-43cc-9843-0f2e59cf8ecf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Herbicide Nichoshield (1L)' =
+			
+			VAR qty_per_hectare=2
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 64827593-35db-4c4d-b4f7-a100733f3969
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Urea Indorama 50kg'
+		dataType: double
+		formatString: 0
+		lineageTag: 447784e1-be19-4c63-8b9b-a5bcd9bfed44
+		summarizeBy: none
+		sourceColumn: Urea Indorama 50kg
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Urea Notore 50kg'
+		dataType: double
+		formatString: 0
+		lineageTag: 2a391887-841b-4953-9275-e0a68f5a5fc8
+		summarizeBy: none
+		sourceColumn: Urea Notore 50kg
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Urea in Stock'
+		dataType: double
+		formatString: 0
+		lineageTag: a7c5415b-f099-46f7-8b1f-cc23a2a3973e
+		summarizeBy: none
+		sourceColumn: Total Urea in Stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Needed Urea (50kg)' =
+			
+			VAR qty_per_hectare=5
+			VAR hectares='Inventory'[HA]
+			Return hectares*qty_per_hectare
+		formatString: 0
+		lineageTag: 5dd14b7d-53e1-48d9-83c3-c04e181738fd
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Inventory = m
+		mode: import
+		queryGroup: LML
+		source =
+				let
+				    Source = GoogleBigQuery.Database(),
+				    #"babbangona-prod" = Source{[Name="babbangona-prod"]}[Data],
+				    odoo_data_Schema = #"babbangona-prod"{[Name="odoo_data",Kind="Schema"]}[Data],
+				    inventory_reports_Table = odoo_data_Schema{[Name="inventory_reports",Kind="Table"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(inventory_reports_Table, each ([product] = "[P1001532003] Herbicide_Nicoshield_1L" or [product] = "[P1001536003] Herbicide_Terazine_1L" or [product] = "[P4038110065] Empty Sack_Empty Sack_100kg" or [product] = "[P4039111013] Needle_Needle_Pieces" or [product] = "[P4045136013] Thread_Thread_Pieces" or [product] = "[P5052144063] Urea_Indorama_50kg" or [product] = "[P5052145063] Urea_Notore_50kg" or [product] = "[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg" or [product] = "[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag" or [product] = "[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag" or [product] = "[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag")),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Filtered Rows", "location", "location - Copy"),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Duplicated Column", "location - Copy", Splitter.SplitTextByDelimiter("/", QuoteStyle.Csv), {"location - Copy.1", "location - Copy.2", "location - Copy.3"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"location - Copy.1", type text}, {"location - Copy.2", type text}, {"location - Copy.3", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"location - Copy.1", "Hub"}, {"location - Copy.3", "ID Location"}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns", each ([ID Location] <> null)),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows1",{"location - Copy.2"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Removed Columns", each ([Hub] = "Funtua" or [Hub] = "Garba Chede" or [Hub] = "Giwa" or [Hub] = "Igabi" or [Hub] = "Ikara" or [Hub] = "Karaye" or [Hub] = "Lere" or [Hub] = "Soba" or [Hub] = "Toro")),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Filtered Rows2",{"id"}),
+				    #"Pivoted Column" = Table.Pivot(#"Removed Columns1", List.Distinct(#"Removed Columns1"[product]), "product", "available_quantity", List.Sum),
+				    #"Uppercased Text" = Table.TransformColumns(#"Pivoted Column",{{"ID Location", Text.Upper, type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Uppercased Text", {"ID Location"}, #"Store Location", {"Supporting Warehouses"}, "ID Location.1", JoinKind.LeftOuter),
+				    #"Expanded ID Location.1" = Table.ExpandTableColumn(#"Merged Queries", "ID Location.1", {"ID Warehouses"}, {"ID Location.1.ID Warehouses"}),
+				    #"Filtered Rows3" = Table.SelectRows(#"Expanded ID Location.1", each ([ID Location.1.ID Warehouses] <> null)),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows3",{"Hub", "[P4038110065] Empty Sack_Empty Sack_100kg", "[P5052144063] Urea_Indorama_50kg", "[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg", "[P4045136013] Thread_Thread_Pieces", "[P1001536003] Herbicide_Terazine_1L", "[P4039111013] Needle_Needle_Pieces", "[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag", "[P5052145063] Urea_Notore_50kg", "[P1001532003] Herbicide_Nicoshield_1L", "[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag", "[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag", "ID Location.1.ID Warehouses"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Removed Other Columns",{{"ID Location.1.ID Warehouses", "ID Location"}}),
+				    #"Grouped Rows" = Table.Group(#"Renamed Columns1", {"ID Location"}, {{"Hub", each List.Max([Hub]), type nullable text}, {"[P4038110065] Empty Sack_Empty Sack_100kg", each List.Sum([#"[P4038110065] Empty Sack_Empty Sack_100kg"]), type nullable number}, {"[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg", each List.Sum([#"[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg"]), type nullable number}, {"[P4045136013] Thread_Thread_Pieces", each List.Sum([#"[P4045136013] Thread_Thread_Pieces"]), type nullable number}, {"[P4039111013] Needle_Needle_Pieces", each List.Sum([#"[P4039111013] Needle_Needle_Pieces"]), type nullable number}, {"[P1001536003] Herbicide_Terazine_1L", each List.Sum([#"[P1001536003] Herbicide_Terazine_1L"]), type nullable number}, {"[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag", each List.Sum([#"[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag"]), type nullable number}, {"[P1001532003] Herbicide_Nicoshield_1L", each List.Sum([#"[P1001532003] Herbicide_Nicoshield_1L"]), type nullable number}, {"[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag", each List.Sum([#"[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag"]), type nullable number}, {"[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag", each List.Sum([#"[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag"]), type nullable number}, {"[P5052144063] Urea_Indorama_50kg", each List.Sum([#"[P5052144063] Urea_Indorama_50kg"]), type nullable number}, {"[P5052145063] Urea_Notore_50kg", each List.Sum([#"[P5052145063] Urea_Notore_50kg"]), type nullable number}}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Grouped Rows", {"ID Location"}, #"Store Hectare Size", {"Store"}, "Store Hectare Size", JoinKind.LeftOuter),
+				    #"Expanded Store Hectare Size" = Table.ExpandTableColumn(#"Merged Queries1", "Store Hectare Size", {"HA"}, {"HA"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Expanded Store Hectare Size",{"ID Location", "Hub", "HA", "[P4038110065] Empty Sack_Empty Sack_100kg", "[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg", "[P4045136013] Thread_Thread_Pieces", "[P4039111013] Needle_Needle_Pieces", "[P1001536003] Herbicide_Terazine_1L", "[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag", "[P1001532003] Herbicide_Nicoshield_1L", "[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag", "[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Reordered Columns",{{"[P4038110065] Empty Sack_Empty Sack_100kg", "Empty Sack (100kg)"}, {"[P5140485063] NPS+ 14:31:00:2.63S:1Zn:0.2B_50kg", "NPS (50kg)"}, {"[P4045136013] Thread_Thread_Pieces", "Thread (Pieces)"}, {"[P1001536003] Herbicide_Terazine_1L", "Herbicide Terazine (1L)"}, {"[P8072183010] Maize Seed_SM15C_12.5kg_Assembly_Bag", "Maize Seed SM15C (12.5kg)"}, {"[P1001532003] Herbicide_Nicoshield_1L", "Herbicide Nicoshield (1L)"}, {"[P8072575010] Maize Seed_Sammaz 15_12.5kg_Bag", "Maize Seed Sammaz 15 (12.5kg)"}, {"[P8072574010] Maize Seed_Sammaz 51_12.5kg_Bag", "Maize Seed Sammaz 51 (12.5kg)"}, {"[P4039111013] Needle_Needle_Pieces", "Needle (Pieces)"}, {"[P5052144063] Urea_Indorama_50kg", "Urea Indorama 50kg"}, {"[P5052145063] Urea_Notore_50kg", "Urea Notore 50kg"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns2",null,0,Replacer.ReplaceValue,{"Empty Sack (100kg)"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",null,0,Replacer.ReplaceValue,{"NPS (50kg)"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1",null,0,Replacer.ReplaceValue,{"Thread (Pieces)"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2",null,0,Replacer.ReplaceValue,{"Needle (Pieces)"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3",null,0,Replacer.ReplaceValue,{"Herbicide Terazine (1L)"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4",null,0,Replacer.ReplaceValue,{"Maize Seed SM15C (12.5kg)"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5",null,0,Replacer.ReplaceValue,{"Herbicide Nicoshield (1L)"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",null,0,Replacer.ReplaceValue,{"Maize Seed Sammaz 15 (12.5kg)"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7",null,0,Replacer.ReplaceValue,{"Urea Indorama 50kg"}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value8",null,0,Replacer.ReplaceValue,{"Urea Notore 50kg"}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9",null,0,Replacer.ReplaceValue,{"Maize Seed Sammaz 51 (12.5kg)"}),
+				    #"Added Custom" = Table.AddColumn(#"Replaced Value10", "Total Urea in Stock", each [Urea Indorama 50kg]+[Urea Notore 50kg]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Total Urea in Stock", type number}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

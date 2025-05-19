@@ -1,0 +1,156 @@
+table tgl_approval_status_entity
+	lineageTag: 00b24ae8-1a8b-4b91-9f83-74609cdf09e3
+
+	column ik_number
+		dataType: string
+		lineageTag: 475b593e-5e4d-44a3-8931-c7ce387f05ee
+		summarizeBy: none
+		sourceColumn: ik_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_update_date
+		dataType: string
+		lineageTag: 9f88be60-e8b8-4019-a155-72d9de4b2eee
+		summarizeBy: none
+		sourceColumn: status_update_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_updated_by
+		dataType: string
+		lineageTag: f2d0b114-6fa9-44de-a92b-1dbe443a0f33
+		summarizeBy: none
+		sourceColumn: status_updated_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column reason_for_rejection
+		dataType: string
+		lineageTag: c8aea55f-ab5c-461c-8309-f5005221b6ed
+		summarizeBy: none
+		sourceColumn: reason_for_rejection
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_wrong_community
+		dataType: string
+		lineageTag: d1f2a11b-eeb4-46be-b1a0-04849d0316b0
+		summarizeBy: none
+		sourceColumn: assigned_wrong_community
+
+		annotation SummarizationSetBy = Automatic
+
+	column know_tgl_community
+		dataType: string
+		lineageTag: 26e2be2f-ecca-4714-90c7-cc79c54f999e
+		summarizeBy: none
+		sourceColumn: know_tgl_community
+
+		annotation SummarizationSetBy = Automatic
+
+	column community_distance
+		dataType: string
+		lineageTag: 4eb355a2-97e6-42f2-bb4c-ea68dfcf9f86
+		summarizeBy: none
+		sourceColumn: community_distance
+
+		annotation SummarizationSetBy = Automatic
+
+	column comment
+		dataType: string
+		lineageTag: 22c3b74d-fb4b-4a6c-bfc0-99480dd7619c
+		summarizeBy: none
+		sourceColumn: comment
+
+		annotation SummarizationSetBy = Automatic
+
+	column image_name
+		dataType: string
+		lineageTag: fdb3b137-c770-4778-a008-bf889fcfeff8
+		summarizeBy: none
+		sourceColumn: image_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column community_head_id
+		dataType: string
+		lineageTag: e6a40b20-b913-4333-a9be-d63f0420e2bb
+		summarizeBy: none
+		sourceColumn: community_head_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column imei
+		dataType: string
+		lineageTag: a0823c58-c85b-4391-adce-0f6291d22e59
+		summarizeBy: none
+		sourceColumn: imei
+
+		annotation SummarizationSetBy = Automatic
+
+	column app_version
+		dataType: string
+		lineageTag: c5849260-472e-42f1-bca7-5932f192c77b
+		summarizeBy: none
+		sourceColumn: app_version
+
+		annotation SummarizationSetBy = Automatic
+
+	column createdAt
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9f6130e5-b0f3-444d-bcbd-3b97353a482b
+		summarizeBy: none
+		sourceColumn: createdAt
+
+		variation Variation
+			isDefault
+			relationship: 9ced0288-a5f9-4a2e-8dd4-536ee49a9759
+			defaultHierarchy: LocalDateTable_d40b83ac-e89e-43e0-8093-10dc7b084fe0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column updatedAt
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 51e9bdaa-d477-417a-ba42-36dd59a5f457
+		summarizeBy: none
+		sourceColumn: updatedAt
+
+		variation Variation
+			isDefault
+			relationship: cbedc909-cebe-43cb-a7cd-0f1fd85f852c
+			defaultHierarchy: LocalDateTable_f62ea583-7c88-473f-acd2-6b85b6965b53.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column hub_id
+		dataType: string
+		lineageTag: b91ff065-26b2-40ec-94ac-b3e03366055d
+		summarizeBy: none
+		sourceColumn: hub_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: a8dac4fa-323d-46e3-a0e1-c99ef9be4639
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition tgl_approval_status_entity = m
+		mode: import
+		source =
+				let
+				    Source = Odbc.Query("dsn=recruitment-db", "SELECT ik_number, status_update_date, status_updated_by, reason_for_rejection, assigned_wrong_community, know_tgl_community, community_distance, comment, image_name, community_head_id, imei, app_version, ""createdAt"", ""updatedAt"", hub_id, status#(lf)#(tab)FROM public.tgl_approval_status_entity where status='APPROVED'"),
+				    #"Removed Duplicates" = Table.Distinct(Source, {"ik_number"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

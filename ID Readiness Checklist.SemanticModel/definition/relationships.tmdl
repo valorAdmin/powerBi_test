@@ -1,0 +1,88 @@
+relationship 80f5a7b7-df12-4179-abe3-6381847967e0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Refresh Date'.'Refresh Date'
+	toColumn: LocalDateTable_481e1dad-4454-48c7-83a8-9af8d116918d.Date
+
+relationship 9800f6e5-e4c8-4854-bf7d-f47c773ef3c5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Refresh Date'.Date
+	toColumn: LocalDateTable_7788b893-e778-4b9f-b69a-ce907e751c77.Date
+
+relationship 58d75567-a35f-e966-4305-18a6ba46eb97
+	fromColumn: members_entity.ik_number
+	toColumn: 'Combined TG'.'TG IK Number'
+
+relationship 9ced0288-a5f9-4a2e-8dd4-536ee49a9759
+	joinOnDateBehavior: datePartOnly
+	fromColumn: tgl_approval_status_entity.createdAt
+	toColumn: LocalDateTable_d40b83ac-e89e-43e0-8093-10dc7b084fe0.Date
+
+relationship cbedc909-cebe-43cb-a7cd-0f1fd85f852c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: tgl_approval_status_entity.updatedAt
+	toColumn: LocalDateTable_f62ea583-7c88-473f-acd2-6b85b6965b53.Date
+
+relationship 27b90d95-2884-acf9-c978-21090f288f9e
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Combined TG'.'TG IK Number'
+	toColumn: tgl_approval_status_entity.ik_number
+
+relationship 314fd363-feae-d897-3c48-03b608a43586
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Combined TG'.'TG IK Number'
+	toColumn: up_front_balance.'TG No'
+
+relationship 15889090-69a5-1b0d-5114-3834d5c675d0
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Combined TG'.'TG IK Number'
+	toColumn: confirmed_deposits_entity.ik_number
+
+relationship AutoDetected_299dfa90-4521-4965-bdc6-2262ddc6732b
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: members_entity.unique_member_id
+	toColumn: complete_members_entity.unique_member_id
+
+relationship AutoDetected_edfdfd8f-bd20-4e70-ae6a-6989d750b85c
+	fromColumn: members_entity.ik_number
+	toColumn: 'members_entity (2)'.ik_number
+
+relationship AutoDetected_fc1f5b47-aebe-49d9-8b22-f6fc1620f93a
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: confirmed_deposits_entity.ik_number
+	toColumn: 'members_entity (2)'.ik_number
+
+relationship AutoDetected_64cff95e-ba01-4ad5-a6a3-1d872bba0929
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: tgl_approval_status_entity.ik_number
+	toColumn: 'members_entity (2)'.ik_number
+
+relationship AutoDetected_d1204acd-727e-45b4-9747-1f7b44c8d94f
+	fromColumn: 'Inventory (Structured)'.'Supporting Stores'
+	toColumn: Inventory.'ID Location'
+
+relationship AutoDetected_4805709c-a114-41f2-92cf-31e616fe5ba6
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Inventory (Structured)'.primary_key
+	toColumn: 'Individual Stores'.primary_key
+
+relationship AutoDetected_0b6b0f7b-1640-42aa-8fa7-d2e579eb3489
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Combined TG'.'Operator ID'
+	toColumn: Operator_Details.'Operator ID'
+
+relationship f5bbd0bc-8038-48a7-9088-6dc31cd30a98
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: operator_store.registered_operator_id
+	toColumn: complete_members_entity.unique_member_id
+
+	annotation PBI_IsFromSource = FS
+

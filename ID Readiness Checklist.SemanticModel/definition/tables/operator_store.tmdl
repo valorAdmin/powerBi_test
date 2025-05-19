@@ -1,0 +1,86 @@
+table operator_store
+	lineageTag: ce33635b-30c3-42f0-abd8-a35fa5530f83
+
+	column registered_operator_id
+		dataType: string
+		lineageTag: 185722e7-a003-476f-bebe-e6ba52c1d65e
+		summarizeBy: none
+		sourceColumn: registered_operator_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Number of Stores Registered'
+		dataType: int64
+		formatString: 0
+		lineageTag: f052cf0a-2dba-41de-b1f8-2806b6b00b1e
+		summarizeBy: sum
+		sourceColumn: Number of Stores Registered
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Number of Approved Stores'
+		dataType: double
+		formatString: 0
+		lineageTag: f1e22b1b-6f79-4713-b3d2-8c0991a878cd
+		summarizeBy: sum
+		sourceColumn: Number of Approved Stores
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'members_entity.ik_number'
+		dataType: string
+		lineageTag: 5df84a25-0847-492a-a72b-aa41310f8944
+		summarizeBy: none
+		sourceColumn: members_entity.ik_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'members_entity.role'
+		dataType: string
+		lineageTag: b4030b6b-8bda-40fc-8bff-84e117db65e6
+		summarizeBy: none
+		sourceColumn: members_entity.role
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operator Id'
+		dataType: string
+		lineageTag: 4348fcc3-3e2d-46b8-8efc-d819954bc262
+		summarizeBy: none
+		sourceColumn: Operator Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Volume (cubic meters)'
+		dataType: double
+		lineageTag: 1633d36c-390b-49e3-9985-739b0c5ac71f
+		summarizeBy: sum
+		sourceColumn: Volume (cubic meters)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition operator_store = m
+		mode: import
+		source =
+				let
+				    Source = Odbc.Query("dsn=inventory-db", "SELECT length, breadth, height, status, registered_operator_id FROM public.operator_store_registration_entity where deactivation_flag=0 and status='APPROVE'"),
+				    #"Changed Type3" = Table.TransformColumnTypes(Source,{{"breadth", type number}, {"height", type number}, {"length", type number}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type3", "Volume(cubic meters)", each [length]*[breadth]*[height]),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Added Custom",{{"Volume(cubic meters)", type number}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Changed Type4", "Approval Check", each if [status] = "APPROVE" then 1 else 0),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Conditional Column",{{"Approval Check", Int64.Type}}),
+				    #"Grouped Rows" = Table.Group(#"Changed Type", {"registered_operator_id"}, {{"Number of Stores Registered", each Table.RowCount(_), Int64.Type}, {"Number of Approved Stores", each List.Sum([Approval Check]), type nullable number}, {"Volume (cubic meters)", each List.Sum([#"Volume(cubic meters)"]), type nullable number}}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Grouped Rows",{{"registered_operator_id", Text.Trim, type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Trimmed Text", {"registered_operator_id"}, complete_members_entity, {"unique_member_id"}, "members_entity", JoinKind.LeftOuter),
+				    #"Expanded members_entity" = Table.ExpandTableColumn(#"Merged Queries", "members_entity", {"ik_number", "role"}, {"members_entity.ik_number", "members_entity.role"}),
+				    #"Added Conditional Column2" = Table.AddColumn(#"Expanded members_entity", "Operator Id", each if Text.StartsWith([registered_operator_id], "T-1C") then [registered_operator_id] else if [members_entity.ik_number] = null then [registered_operator_id] else [members_entity.ik_number]),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Conditional Column2",{{"Operator Id", type text}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
